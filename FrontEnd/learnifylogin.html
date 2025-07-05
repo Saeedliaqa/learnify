@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify Login page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <!-- Axios CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+    
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      
+      .shimmer-text {
+        background: linear-gradient(45deg, #212121, #308fe8, #212121);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 2s ease-in-out infinite;
+      }
+      
+      @keyframes shimmer {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+      
+      .animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+
+      .success-animation {
+        animation: successBounce 0.6s ease-out;
+      }
+
+      @keyframes successBounce {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+    </style>
+</head>
+<body>
+<!-- Login Page -->
+<section class="min-h-screen bg-[#212121] flex items-center justify-center px-4">
+    <div class="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl gap-10 mt-15 sm:mt-10">
+  
+      <!-- Left: Login Form -->
+      <div class="relative bg-[#ffffff] rounded-2xl px-8 py-10 w-full max-w-md">
+        <!-- Glowing Border -->
+        <div class="absolute inset-0 rounded-2xl border-4 border-[#308fe8] animate-pulse pointer-events-none"></div>
+  
+        <!-- Form Content -->
+        <form id="loginForm" class="relative z-10 flex flex-col space-y-6">
+          <h2 class="text-[#212121] text-3xl font-bold text-center shimmer-text">Login</h2>
+          
+          <!-- Error/Success Message -->
+          <div id="messageDiv" class="hidden p-3 rounded-lg text-center text-sm font-medium"></div>
+
+          <input
+            id="email"
+            type="email"
+            placeholder="Email Address"
+            class="w-full px-4 py-3 rounded-lg bg-[#212121] text-white text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#308fe8] transition-all duration-200"
+            required
+          />
+
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            class="w-full px-4 py-3 rounded-lg bg-[#212121] text-white text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#308fe8] transition-all duration-200"
+            required
+          />
+
+          <button
+            type="submit"
+            id="submitBtn"
+            class="w-full bg-[#212121] text-white font-semibold py-3 rounded-lg hover:bg-[#308fe8] hover:text-white transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#308fe8] focus:ring-offset-2"
+          >
+            Login
+          </button>
+        </form>
+        
+        <!-- Sign up Link -->
+        <div class="text-center mt-6">
+          <p class="text-gray-600 text-sm">
+            Don't have an account? 
+            <a href="./Learnifysignup.html" class="text-[#308fe8] hover:underline font-medium">Sign Up</a>
+          </p>
+        </div>
+      </div>
+  
+      <!-- Right: Image -->
+      <div class="w-full max-w-sm">
+        <div class="w-full h-64 bg-gradient-to-br from-[#308fe8] to-[#212121] rounded-xl flex items-center justify-center">
+          <div class="text-white text-center">
+            <div class="text-6xl mb-4">🎓</div>
+            <h3 class="text-2xl font-bold mb-2">Welcome Back!</h3>
+            <p class="text-lg opacity-90">Continue your learning journey</p>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const loginForm = document.getElementById('loginForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const messageDiv = document.getElementById('messageDiv');
+      
+      // 🔍 Check if user is already logged in
+      checkExistingAuth();
+      
+      async function checkExistingAuth() {
+          const existingToken = localStorage.getItem('learnify_token');
+          if (existingToken) {
+              // Verify if the token is still valid
+              try {
+                  const response = await axios.get('http://localhost:3000/api/auth/me', {
+                      headers: { 'Authorization': `Bearer ${existingToken}` },
+                      timeout: 5000
+                  });
+                  
+                  if (response.status === 200) {
+                      console.log('✅ User already authenticated, redirecting...');
+                      showMessage('Already logged in! Redirecting to dashboard...', false);
+                      setTimeout(() => {
+                          window.location.href = './learnifyuser.html';
+                      }, 1000);
+                      return;
+                  }
+              } catch (error) {
+                  // Token is invalid, remove it
+                  console.log('❌ Existing token is invalid, clearing...');
+                  localStorage.removeItem('learnify_token');
+                  localStorage.removeItem('learnify_user');
+              }
+          }
+      }
+      
+      // Function to show messages with enhanced styling
+      function showMessage(message, isError = false) {
+          messageDiv.textContent = message;
+          messageDiv.className = `p-3 rounded-lg text-center text-sm font-medium transition-all duration-300 ${
+              isError 
+                  ? 'bg-red-100 text-red-700 border border-red-300' 
+                  : 'bg-green-100 text-green-700 border border-green-300 success-animation'
+          }`;
+          messageDiv.classList.remove('hidden');
+          
+          // Auto-hide after 5 seconds
+          setTimeout(() => {
+              messageDiv.classList.add('hidden');
+          }, 5000);
+      }
+      
+      // Function to set loading state
+      function setLoadingState(isLoading) {
+          if (isLoading) {
+              submitBtn.innerHTML = `
+                <div class="flex items-center justify-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Logging in...
+                </div>
+              `;
+              submitBtn.disabled = true;
+              submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          } else {
+              submitBtn.innerHTML = 'Login';
+              submitBtn.disabled = false;
+              submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+      }
+      
+      // Enhanced email validation
+      function isValidEmail(email) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+      }
+      
+      // 💾 Enhanced save user data with validation
+      function saveUserData(token, user) {
+          try {
+              // Validate token format
+              if (!token || typeof token !== 'string') {
+                  throw new Error('Invalid token format');
+              }
+              
+              // Validate user data
+              if (!user || !user._id || !user.email) {
+                  throw new Error('Invalid user data');
+              }
+              
+              localStorage.setItem('learnify_token', token);
+              localStorage.setItem('learnify_user', JSON.stringify(user));
+              localStorage.setItem('learnify_login_time', Date.now().toString());
+              
+              console.log('✅ User data saved successfully:', {
+                  userId: user._id,
+                  email: user.email,
+                  name: user.name,
+                  coins: user.coins
+              });
+              
+              return true;
+          } catch (error) {
+              console.error('❌ Error saving user data:', error);
+              return false;
+          }
+      }
+      
+      // 🔐 Handle form submission with enhanced error handling
+      loginForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          // Get form data
+          const email = document.getElementById('email').value.trim();
+          const password = document.getElementById('password').value;
+          
+          // Basic validation
+          if (!email || !password) {
+              showMessage('Please fill in all fields', true);
+              return;
+          }
+          
+          if (!isValidEmail(email)) {
+              showMessage('Please enter a valid email address', true);
+              return;
+          }
+          
+          if (password.length < 6) {
+              showMessage('Password must be at least 6 characters long', true);
+              return;
+          }
+          
+          // Set loading state
+          setLoadingState(true);
+          
+          try {
+              console.log('🔄 Attempting login for:', email);
+              
+              // Send login request to backend API
+              const response = await axios.post('http://localhost:3000/api/auth/login', {
+                  email: email,
+                  password: password
+              }, {
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  timeout: 15000 // 15 second timeout
+              });
+              
+              // ✅ Handle successful response
+              if (response.status === 200) {
+                  const { token, user, message } = response.data;
+                  
+                  console.log('✅ Login successful:', {
+                      userId: user._id,
+                      email: user.email,
+                      name: user.name
+                  });
+                  
+                  // 💾 Save token and user data to localStorage
+                  const saved = saveUserData(token, user);
+                  
+                  if (!saved) {
+                      showMessage('Login successful but failed to save session. Please try again.', true);
+                      return;
+                  }
+                  
+                  // 🎉 Show success message with animation
+                  showMessage(message || '🎉 Login successful! Welcome back to Learnify!', false);
+                  
+                  // Clear the form
+                  loginForm.reset();
+                  
+                  // 🔄 Redirect to protected dashboard after delay
+                  setTimeout(() => {
+                      console.log('🔄 Redirecting to dashboard...');
+                      window.location.href = './learnifyuser.html';
+                  }, 2000); // Increased delay to show success message
+              }
+              
+          } catch (error) {
+              console.error('❌ Login failed:', error);
+              
+              // Handle different types of errors
+              let errorMessage = 'Something went wrong. Please try again.';
+              
+              if (error.response) {
+                  // Server responded with error status
+                  const status = error.response.status;
+                  const data = error.response.data;
+                  
+                  console.log('Server Error Details:', {
+                      status: status,
+                      data: data
+                  });
+                  
+                  switch (status) {
+                      case 400:
+                          errorMessage = data.message || 'Invalid email or password. Please check your credentials.';
+                          break;
+                      case 401:
+                          errorMessage = 'Invalid credentials. Please check your email and password.';
+                          break;
+                      case 404:
+                          errorMessage = 'User not found. Please check your email or sign up for a new account.';
+                          break;
+                      case 422:
+                          errorMessage = data.message || 'Please provide valid information.';
+                          break;
+                      case 429:
+                          errorMessage = 'Too many login attempts. Please wait a moment and try again.';
+                          break;
+                      case 500:
+                          errorMessage = 'Server error detected. Please try again later.';
+                          break;
+                      case 502:
+                      case 503:
+                          errorMessage = 'Server temporarily unavailable. Please try again later.';
+                          break;
+                      default:
+                          errorMessage = data.message || `Server returned error code: ${status}`;
+                  }
+              } else if (error.request) {
+                  // Network error
+                  errorMessage = 'Unable to connect to server. Please check your internet connection and try again.';
+              } else if (error.code === 'ECONNABORTED') {
+                  // Timeout error
+                  errorMessage = 'Request timed out. Please check your connection and try again.';
+              }
+              
+              showMessage(errorMessage, true);
+          } finally {
+              // Reset loading state
+              setLoadingState(false);
+          }
+      });
+      
+      // Initialize AOS animations
+      if (typeof AOS !== 'undefined') {
+          AOS.init({
+              duration: 800,
+              easing: 'ease-in-out',
+              once: true
+          });
+      }
+      
+      // Add input validation feedback
+      const inputs = ['email', 'password'];
+      inputs.forEach(inputId => {
+          const input = document.getElementById(inputId);
+          input.addEventListener('blur', function() {
+              if (this.value.trim() === '') {
+                  this.classList.add('border-red-500');
+              } else {
+                  this.classList.remove('border-red-500');
+              }
+          });
+          
+          input.addEventListener('input', function() {
+              this.classList.remove('border-red-500');
+          });
+      });
+      
+      // Handle "Enter" key press
+      document.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter' && (document.activeElement.id === 'email' || document.activeElement.id === 'password')) {
+              e.preventDefault();
+              loginForm.dispatchEvent(new Event('submit'));
+          }
+      });
+  });
+</script>
+
+</body>  
+</html>

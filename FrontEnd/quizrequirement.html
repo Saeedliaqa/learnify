@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Requirements - Learnify</title>
+    <link href="./output.css" rel="stylesheet" />
+    <link rel="stylesheet" href="Learnify.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <!-- Axios CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+    
+    <!-- 🔗 Shared Authentication Script -->
+    <script src="./auth.js"></script>
+  </head>
+
+  <body>
+    <!-- 📡 Navbar will be automatically loaded here by shared-auth.js -->
+    
+    <div>
+        <!-- Main Content Section -->
+        <header class="h-[80vh] flex flex-col items-center justify-center bg-[#212121] px-4 m-4 rounded-3xl relative
+                    md:h-[80vh] md:px-4 md:m-4">
+          <!-- Glowing border within the h-[80vh] -->
+          <div class="absolute inset-0 rounded-3xl border-4 border-[#308fe8] animate-pulse opacity-100 pointer-events-none"></div>
+
+          <div class="relative flex flex-col items-center justify-center w-full max-w-md md:max-w-md px-4 md:px-0">
+            <!-- Heading -->
+            <div class="mb-6 md:mb-8 text-center px-2 md:px-0">
+              <h1 class="text-xl md:text-4xl font-bold text-white shimmer-text leading-tight whitespace-normal md:whitespace-nowrap">
+                "Level-Up your Learning with Learnify."
+              </h1>
+            </div>
+
+            <!-- Form -->
+            <div class="w-full bg-[#212121] rounded-3xl mt-2 p-4 md:p-6">
+              <form class="space-y-5 md:space-y-6" id="requirementForm">
+                <!-- Topic Name -->
+                <div>
+                  <label for="topic" class="sr-only">Topic</label>
+                  <input
+                    type="text"
+                    id="topic"
+                    name="topic"
+                    placeholder="Name of the Topic (e.g., JavaScript, Python, Biology)"
+                    class="w-full rounded-3xl border border-gray-600 bg-[#2a2a2a] text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#308fe8] transition-all"
+                    required
+                  />
+                </div>
+
+                <!-- Difficulty/Level -->
+                <div>
+                  <label for="level" class="sr-only">Difficulty Level</label>
+                  <select
+                    id="level"
+                    name="level"
+                    class="w-full rounded-3xl border border-gray-600 bg-[#2a2a2a] text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#308fe8] transition-all"
+                    required
+                  >
+                    <option value="">Select Difficulty Level</option>
+                    <option value="beginner">🟢 Beginner - Easy concepts and basics</option>
+                    <option value="intermediate">🟡 Intermediate - Moderate complexity</option>
+                    <option value="advanced">🔴 Advanced - Complex and challenging</option>
+                  </select>
+                </div>
+
+                <!-- Info Section -->
+                <div class="bg-[#2a2a2a] rounded-3xl p-4 border border-gray-600">
+                  <div class="text-center text-white">
+                    <div class="text-2xl mb-2">🎓</div>
+                    <p class="text-sm opacity-80">Generate 10 Questions on topic of your choice</p>
+                    <p class="text-xs opacity-60 mt-1">Completely free • No coin cost</p>
+                  </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="text-center">
+                  <button
+                    type="submit"
+                    id="generateQuizBtn"
+                    class="w-full bg-[#308fe8] text-white font-semibold px-8 py-3 rounded-3xl hover:bg-[#256dc4] transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  >
+                    🚀 Generate Quiz
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </header>
+
+        <script>
+          // 🧠 Page-specific quiz generation functionality
+          // This runs after authentication is complete
+          
+          // Wait for shared-auth.js to complete authentication
+          document.addEventListener('DOMContentLoaded', function () {
+            // Set up form submission after auth is ready
+            setupQuizGeneration();
+          });
+
+          function setupQuizGeneration() {
+            const requirementForm = document.getElementById('requirementForm');
+
+            requirementForm.addEventListener('submit', async function (event) {
+              event.preventDefault();
+
+              // Check authentication first (redundant check, but good practice)
+              const token = localStorage.getItem('learnify_token');
+              if (!token) {
+                  alert('Please login to generate quizzes');
+                  window.location.href = './learnifylogin.html';
+                  return;
+              }
+
+              const topic = document.getElementById('topic').value.trim();
+              const level = document.getElementById('level').value;
+
+              // Enhanced validation
+              if (!topic) {
+                  alert('Please enter a topic for your quiz');
+                  document.getElementById('topic').focus();
+                  return;
+              }
+
+              if (topic.length < 3) {
+                  alert('Topic must be at least 3 characters long');
+                  document.getElementById('topic').focus();
+                  return;
+              }
+
+              if (!level) {
+                  alert('Please select a difficulty level');
+                  document.getElementById('level').focus();
+                  return;
+              }
+
+              // Show enhanced loading state
+              const submitBtn = document.getElementById('generateQuizBtn');
+              const originalText = submitBtn.innerHTML;
+              submitBtn.innerHTML = `
+                <div class="flex items-center justify-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  🤖 AI is generating your quiz...
+                </div>
+              `;
+              submitBtn.disabled = true;
+
+              // Disable form inputs during generation
+              document.getElementById('topic').disabled = true;
+              document.getElementById('level').disabled = true;
+
+              try {
+                console.log(`🔄 Generating quiz for "${topic}" at ${level} level...`);
+                
+                // Send request to your backend API
+                const response = await axios.post('http://localhost:3000/api/quiz/generate', {
+                  topic: topic,
+                  level: level
+                }, {
+                  headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                  },
+                  timeout: 45000 // 45 second timeout for AI generation
+                });
+
+                if (response.status === 200 && response.data.questions) {
+                  console.log('✅ Quiz generated successfully:', response.data);
+                  
+                  // Store quiz data for the quiz page
+                  const quizData = {
+                    questions: response.data.questions,
+                    topic: topic,
+                    level: level,
+                    generatedAt: new Date().toISOString(),
+                    message: response.data.message,
+                    totalQuestions: response.data.questions.length
+                  };
+                  
+                  localStorage.setItem('currentQuiz', JSON.stringify(quizData));
+                  
+                  // Show success animation
+                  submitBtn.innerHTML = `
+                    <div class="flex items-center justify-center">
+                      <span class="text-2xl mr-2">🎉</span>
+                      Quiz Generated Successfully!
+                    </div>
+                  `;
+                  submitBtn.classList.add('bg-green-500');
+                  submitBtn.classList.remove('bg-[#308fe8]');
+                  
+                  // Brief delay before redirect
+                  setTimeout(() => {
+                      console.log('🔄 Redirecting to quiz page...');
+                      window.location.href = './learnifyquiz.html';
+                  }, 1500);
+                  
+                } else {
+                  throw new Error('Invalid response format from server');
+                }
+                
+              } catch (error) {
+                console.error('❌ Error generating quiz:', error);
+                
+                let errorMessage = 'Failed to generate quiz. Please try again.';
+                let errorDetails = '';
+                
+                if (error.response) {
+                  const status = error.response.status;
+                  const data = error.response.data;
+                  
+                  console.log('Server error details:', { status, data });
+                  
+                  switch (status) {
+                    case 400:
+                      errorMessage = data.error || 'Invalid input. Please check your topic and level.';
+                      errorDetails = 'Make sure your topic is clear and specific.';
+                      break;
+                    case 401:
+                      errorMessage = 'Authentication failed. Please login again.';
+                      localStorage.removeItem('learnify_token');
+                      localStorage.removeItem('learnify_user');
+                      setTimeout(() => window.location.href = './learnifylogin.html', 2000);
+                      break;
+                    case 404:
+                      errorMessage = 'Quiz generation service not found.';
+                      errorDetails = 'Please contact support if this persists.';
+                      break;
+                    case 429:
+                      errorMessage = 'Too many requests. Please wait a moment and try again.';
+                      errorDetails = 'Our AI is currently busy. Please try again in a few minutes.';
+                      break;
+                    case 500:
+                      errorMessage = 'Server error occurred during quiz generation.';
+                      errorDetails = 'This might be a temporary issue. Please try again.';
+                      break;
+                    default:
+                      errorMessage = data.error || `Server error: ${status}`;
+                      errorDetails = 'Unexpected server response.';
+                  }
+                } else if (error.request) {
+                  errorMessage = 'Cannot connect to server.';
+                  errorDetails = 'Please check your internet connection and try again.';
+                } else if (error.code === 'ECONNABORTED') {
+                  errorMessage = 'Request timed out.';
+                  errorDetails = 'The AI is taking longer than expected. Please try with a simpler topic or try again later.';
+                } else {
+                  errorDetails = error.message;
+                }
+                
+                // Show detailed error
+                alert(`${errorMessage}\n\n${errorDetails}`);
+                
+              } finally {
+                // Reset button and form state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('bg-green-500');
+                submitBtn.classList.add('bg-[#308fe8]');
+                
+                // Re-enable form inputs
+                document.getElementById('topic').disabled = false;
+                document.getElementById('level').disabled = false;
+              }
+            });
+
+            // Add input enhancements
+            setupInputEnhancements();
+          }
+
+          function setupInputEnhancements() {
+            const topicInput = document.getElementById('topic');
+            const levelSelect = document.getElementById('level');
+
+            // Topic input enhancements
+            topicInput.addEventListener('input', function() {
+              const value = this.value.trim();
+              if (value.length > 0 && value.length < 3) {
+                this.style.borderColor = '#f59e0b'; // Warning color
+              } else if (value.length >= 3) {
+                this.style.borderColor = '#10b981'; // Success color
+              } else {
+                this.style.borderColor = '#6b7280'; // Default color
+              }
+            });
+
+            // Level select enhancements
+            levelSelect.addEventListener('change', function() {
+              if (this.value) {
+                this.style.borderColor = '#10b981'; // Success color
+                
+                // Show helpful hint based on level
+                const hints = {
+                  'beginner': 'Perfect for learning basics and fundamentals!',
+                  'intermediate': 'Great for testing practical knowledge!',
+                  'advanced': 'Challenge yourself with complex concepts!'
+                };
+                
+                console.log(`💡 ${hints[this.value]}`);
+              }
+            });
+
+            // Add example topics on focus
+            topicInput.addEventListener('focus', function() {
+              if (!this.value) {
+                this.placeholder = 'e.g., JavaScript Functions, Python Loops, Cell Biology, World History...';
+              }
+            });
+
+            topicInput.addEventListener('blur', function() {
+              if (!this.value) {
+                this.placeholder = 'Name of the Topic (e.g., JavaScript, Python, Biology)';
+              }
+            });
+          }
+        </script>
+    </div>
+  </body>
+</html>

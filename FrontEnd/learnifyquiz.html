@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Page</title>
+    <link href="./output.css" rel="stylesheet" />
+    <link rel="stylesheet" href="Learnify.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <!-- Axios CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+
+    <script>
+      // 🔐 ENHANCED SECURITY PROTECTION SCRIPT
+      document.addEventListener('DOMContentLoaded', async function() {
+          console.log('🔍 Starting authentication check for Quiz Page...');
+          
+          // Get token from localStorage
+          const token = localStorage.getItem('learnify_token');
+          
+          if (!token) {
+              console.log('❌ No token found - redirecting to login');
+              alert('Please login to take quizzes');
+              window.location.href = './learnifylogin.html?error=no_token';
+              return;
+          }
+
+          // Verify token with your backend API
+          try {
+              console.log('🔍 Verifying token with server...');
+              const response = await axios.get('http://localhost:3000/api/auth/me', {
+                  headers: {
+                      'Authorization': `Bearer ${token}`
+                  },
+                  timeout: 10000
+              });
+              
+              if (response.status === 200 && response.data.user) {
+                  console.log('✅ Token verified - user authenticated');
+                  
+                  // Update localStorage with fresh user data
+                  localStorage.setItem('learnify_user', JSON.stringify(response.data.user));
+                  
+                  // Set default axios headers for future requests
+                  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                  
+                  // Update UI with user data
+                  updateUserInterface(response.data.user);
+                  
+              } else {
+                  throw new Error('Invalid server response');
+              }
+          } catch (error) {
+              console.error('❌ Token verification failed:', error);
+              
+              // Clear invalid token
+              localStorage.removeItem('learnify_token');
+              localStorage.removeItem('learnify_user');
+              localStorage.removeItem('learnify_login_time');
+              
+              alert('Your session has expired. Please login again.');
+              window.location.href = './learnifylogin.html?error=invalid_token';
+              return;
+          }
+      });
+
+      // Function to update UI with user data from database
+      function updateUserInterface(user) {
+          try {
+              console.log('🔄 Updating UI with user data:', user);
+              
+              // Update coin count displays
+              const coinCountEls = document.querySelectorAll('#coin-count');
+              coinCountEls.forEach(el => {
+                  if (el) {
+                      el.textContent = user.coins || 0;
+                  }
+              });
+              
+              // Store user data globally
+              window.currentUser = user;
+              
+              console.log('✅ UI updated successfully');
+              
+          } catch (error) {
+              console.error('Error updating UI:', error);
+          }
+      }
+
+      // Enhanced logout function
+      function logout() {
+          if (confirm('Are you sure you want to logout?')) {
+              console.log('🚪 Logging out user...');
+              
+              // Clear all authentication data
+              localStorage.removeItem('learnify_token');
+              localStorage.removeItem('learnify_user');
+              localStorage.removeItem('learnify_login_time');
+              localStorage.removeItem('currentQuiz');
+              
+              // Clear axios defaults
+              delete axios.defaults.headers.common['Authorization'];
+              
+              alert('You have been logged out successfully!');
+              window.location.href = './learnifylogin.html?message=logged_out';
+          }
+      }
+    </script>
+  </head>
+  
+  <body>
+    <div>
+        <!-- Navbar -->
+       <nav class="h-20 flex items-center justify-between px-6 py-4 bg-white">
+          <!-- Left: Logo -->
+          <div class="text-4xl font-bold text-[#212121]">Learnify.</div>
+
+          <!-- Right: Desktop (md and above) -->
+          <div class="hidden md:flex items-center justify-between w-full px-8">
+            <ul class="flex items-center gap-8 text-[#212121] text-lg font-semibold mt-2.5">
+              <li class="hover:text-[#308fe8]"><a href="./learnifyuser.html">DashBoard</a></li>
+              <li class="hover:text-[#308fe8]"><a href="./quizrequirement.html">New Quiz</a></li>
+            </ul>
+
+            <ul class="flex items-center gap-4 text-[#212121] text-lg mt-1">
+              <li>
+                <div
+                  id="coin-display"
+                  class="bg-[#212121] text-white font-semibold px-5 py-2 rounded-3xl whitespace-nowrap min-w-[80px]"
+                >
+                  Coins: <span id="coin-count">Loading...</span>
+                </div>
+              </li>
+
+              <li class="relative group">
+                <button class="px-2 py-2">
+                  <img src="images/Untitled design (15).png" alt="User Icon" class="h-[2rem]" />
+                </button>
+                <ul
+                  class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg hidden group-hover:block z-10 text-sm text-[#212121]"
+                >
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="logout()">Logout</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right: Mobile -->
+          <div class="flex md:hidden items-center gap-4">
+            <div
+              id="coin-display-mobile"
+              class="bg-[#212121] text-white font-semibold px-4 py-1.5 rounded-3xl text-sm"
+            >
+              Coins: <span id="coin-count">Loading...</span>
+            </div>
+
+            <!-- Profile Icon as Toggle -->
+            <button id="mobile-menu-toggle1">
+              <img src="images/Untitled design (15).png" alt="User Icon" class="h-[1.5rem]" />
+            </button>
+          </div>
+        </nav>
+
+        <!-- Mobile Dropdown Menu (hidden by default) -->
+        <div id="mobile-menu1" class="hidden bg-white py-4 px-8 md:hidden">
+          <ul class="flex flex-col gap-4 text-[#212121] text-lg font-semibold mb-4">
+            <li class="hover:text-[#308fe8]"><a href="./learnifyuser.html">DashBoard</a></li>
+            <li class="hover:text-[#308fe8]"><a href="./quizrequirement.html">New Quiz</a></li>
+            <li class="hover:text-[#308fe8] cursor-pointer">Settings</li>
+            <li class="hover:text-[#308fe8] cursor-pointer" onclick="logout()">Logout</li>
+          </ul>
+        </div>
+
+        <!-- Quiz Container -->
+        <section class="min-h-screen flex flex-col items-center justify-center bg-[#212121] px-4 m-4 rounded-2xl relative overflow-hidden">
+
+          <div class="p-4">
+            <!-- Centered Heading -->
+            <div class="relative z-10 mb-4 mt-8 text-center">
+              <h1 class="text-3xl md:text-4xl font-bold text-white shimmer-text">
+                Level-Up Your Learning with Learnify!
+              </h1>
+              <p id="quizInfo" class="text-white mt-2 opacity-80"></p>
+            </div>
+
+            <!-- Quiz Content -->
+            <div class="relative z-10 w-full max-w-4xl p-6 bg-[#212121] rounded-3xl text-white" id="questionContainer">
+              <!-- Glowing Border -->
+              <div class="absolute inset-0 rounded-3xl border-4 border-[#308fe8] animate-pulse opacity-100 pointer-events-none"></div>
+              <!-- Loading state initially -->
+              <div class="text-center py-8">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                <p>Loading quiz questions...</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <script>
+          // 🔧 Mobile menu functionality
+          document.addEventListener('DOMContentLoaded', function() {
+              const mobileMenuToggle = document.getElementById('mobile-menu-toggle1');
+              const mobileMenu = document.getElementById('mobile-menu1');
+
+              if (mobileMenuToggle && mobileMenu) {
+                  mobileMenuToggle.addEventListener('click', function() {
+                      mobileMenu.classList.toggle('hidden');
+                  });
+              }
+
+              // Initialize AOS if available
+              if (typeof AOS !== 'undefined') {
+                  AOS.init({
+                      duration: 800,
+                      easing: 'ease-in-out',
+                      once: true
+                  });
+              }
+          });
+
+          // 🧠 Quiz functionality with API integration
+          document.addEventListener('DOMContentLoaded', function () {
+            const questionContainer = document.getElementById('questionContainer');
+            const quizInfo = document.getElementById('quizInfo');
+            
+            // Get quiz data from localStorage
+            const storedQuiz = localStorage.getItem('currentQuiz');
+
+            if (!storedQuiz) {
+              questionContainer.innerHTML = `
+                <div class="text-center py-8">
+                  <p class="text-xl mb-4">No quiz found!</p>
+                  <p class="mb-4">Please generate a quiz first.</p>
+                  <a href="./quizrequirement.html" class="bg-[#308fe8] text-white px-6 py-3 rounded-lg hover:bg-[#256dc4] transition-all">
+                    Generate Quiz
+                  </a>
+                </div>
+              `;
+              return;
+            }
+
+            let quizData;
+            try {
+              quizData = JSON.parse(storedQuiz);
+            } catch (error) {
+              console.error('Error parsing quiz data:', error);
+              questionContainer.innerHTML = '<p class="text-center">Error loading quiz data.</p>';
+              return;
+            }
+
+            const questions = quizData.questions;
+            if (!questions || !Array.isArray(questions)) {
+              questionContainer.innerHTML = '<p class="text-center">Invalid quiz data format.</p>';
+              return;
+            }
+
+            // Display quiz info
+            if (quizInfo) {
+              quizInfo.textContent = `Topic: ${quizData.topic || 'General'} | Level: ${quizData.level || 'Intermediate'} | Questions: ${questions.length}`;
+            }
+
+            // Clear loading state
+            questionContainer.innerHTML = '';
+
+            // Create popup overlay for results
+            const popupOverlay = document.createElement('div');
+            popupOverlay.id = 'popupOverlay';
+            popupOverlay.style.cssText = `
+              position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+              background: rgba(0, 0, 0, 0.8); display: none; align-items: center;
+              justify-content: center; z-index: 999;
+            `;
+
+            const popupBox = document.createElement('div');
+            popupBox.style.cssText = `
+              background: white; padding: 30px; border-radius: 15px; text-align: center;
+              max-width: 400px; width: 90%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            `;
+
+            const popupMessage = document.createElement('p');
+            popupMessage.id = 'popupMessage';
+            popupMessage.style.cssText = 'font-size: 18px; margin-bottom: 15px; color: #333;';
+
+            const coinMessage = document.createElement('p');
+            coinMessage.id = 'coinMessage';
+            coinMessage.style.cssText = 'font-size: 16px; margin-bottom: 20px; color: #555;';
+
+            const viewAnswersBtn = document.createElement('button');
+            viewAnswersBtn.textContent = 'View Answers';
+            viewAnswersBtn.className = "bg-[#212121] text-white px-6 py-3 rounded-lg hover:bg-[#308fe8] transition-all";
+            
+            viewAnswersBtn.onclick = function () {
+              popupOverlay.style.display = 'none';
+
+              // Show correct answers
+              questions.forEach((_, qIndex) => {
+                const answerDisplay = document.getElementById(`answer-display-${qIndex}`);
+                if (answerDisplay) {
+                  const question = questions[qIndex];
+                  const correctOption = question.options[question.correctIndex];
+                  answerDisplay.innerHTML = `<strong>Correct Answer:</strong> ${correctOption}`;
+                  answerDisplay.style.display = 'block';
+                  answerDisplay.style.cssText += 'color: #10b981; font-weight: bold; margin-top: 10px; padding: 8px; background: rgba(16, 185, 129, 0.1); border-radius: 5px;';
+                }
+              });
+
+              // Remove submit button and add navigation buttons
+              const submitBtn = document.querySelector('#submitQuizBtn');
+              if (submitBtn) submitBtn.remove();
+
+              const buttonContainer = document.createElement('div');
+              buttonContainer.style.cssText = 'display: flex; gap: 15px; margin-top: 30px; justify-content: center; flex-wrap: wrap;';
+
+              const newQuizBtn = document.createElement('button');
+              newQuizBtn.textContent = 'New Quiz';
+              newQuizBtn.className = "bg-[#308fe8] text-white px-6 py-3 rounded-lg hover:bg-[#256dc4] transition-all";
+              newQuizBtn.onclick = () => {
+                localStorage.removeItem('currentQuiz');
+                window.location.href = './quizrequirement.html';
+              };
+
+              const dashboardBtn = document.createElement('button');
+              dashboardBtn.textContent = 'Dashboard';
+              dashboardBtn.className = "bg-[#308fe8] text-white px-6 py-3 rounded-lg hover:bg-[#256dc4] transition-all";
+              dashboardBtn.onclick = () => {
+                localStorage.removeItem('currentQuiz');
+                window.location.href = './learnifyuser.html';
+              };
+
+              buttonContainer.appendChild(newQuizBtn);
+              buttonContainer.appendChild(dashboardBtn);
+              questionContainer.appendChild(buttonContainer);
+            };
+
+            popupBox.appendChild(popupMessage);
+            popupBox.appendChild(coinMessage);
+            popupBox.appendChild(viewAnswersBtn);
+            popupOverlay.appendChild(popupBox);
+            document.body.appendChild(popupOverlay);
+
+            // Render each question
+            questions.forEach((question, index) => {
+              const questionDiv = document.createElement('div');
+              questionDiv.style.cssText = `
+                border: 2px solid #374151; margin: 20px 0; padding: 20px; 
+                border-radius: 10px; background: rgba(55, 65, 81, 0.3);
+              `;
+
+              const title = document.createElement('h3');
+              title.textContent = `${index + 1}. ${question.question}`;
+              title.style.cssText = 'font-size: 18px; margin-bottom: 15px; color: white; font-weight: 600;';
+              questionDiv.appendChild(title);
+
+              // Render options
+              question.options.forEach((option, optIndex) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.style.cssText = 'margin: 8px 0; padding: 10px; border-radius: 5px; transition: background 0.2s;';
+                
+                const optionId = `q${index}_opt${optIndex}`;
+                
+                const label = document.createElement('label');
+                label.setAttribute('for', optionId);
+                label.style.cssText = 'display: flex; align-items: center; cursor: pointer; color: white;';
+                
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = `question${index}`;
+                input.id = optionId;
+                input.value = optIndex;
+                input.style.cssText = 'margin-right: 10px; transform: scale(1.2);';
+                
+                // Add hover effect
+                optionDiv.addEventListener('mouseenter', () => {
+                  optionDiv.style.background = 'rgba(48, 143, 232, 0.2)';
+                });
+                optionDiv.addEventListener('mouseleave', () => {
+                  optionDiv.style.background = 'transparent';
+                });
+
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(option));
+                optionDiv.appendChild(label);
+                questionDiv.appendChild(optionDiv);
+              });
+
+              // Answer display (hidden initially)
+              const answerDisplay = document.createElement('div');
+              answerDisplay.id = `answer-display-${index}`;
+              answerDisplay.style.display = 'none';
+              questionDiv.appendChild(answerDisplay);
+
+              questionContainer.appendChild(questionDiv);
+            });
+
+            // Submit button
+            const submitBtn = document.createElement('button');
+            submitBtn.id = 'submitQuizBtn';
+            submitBtn.textContent = 'Submit Quiz';
+            submitBtn.style.cssText = `
+              margin-top: 30px; background: white; color: #212121; 
+              padding: 15px 30px; border-radius: 10px; font-weight: 600; 
+              border: none; cursor: pointer; font-size: 16px; 
+              transition: all 0.3s; display: block; margin-left: auto; margin-right: auto;
+            `;
+            
+            // Add hover effect
+            submitBtn.addEventListener('mouseenter', () => {
+              submitBtn.style.background = '#308fe8';
+              submitBtn.style.color = 'white';
+              submitBtn.style.transform = 'translateY(-2px)';
+            });
+            submitBtn.addEventListener('mouseleave', () => {
+              submitBtn.style.background = 'white';
+              submitBtn.style.color = '#212121';
+              submitBtn.style.transform = 'translateY(0)';
+            });
+
+            submitBtn.onclick = async () => {
+              // Collect answers
+              const answers = [];
+              let allAnswered = true;
+
+              for (let i = 0; i < questions.length; i++) {
+                const selected = document.querySelector(`input[name="question${i}"]:checked`);
+                if (selected) {
+                  answers.push(parseInt(selected.value));
+                } else {
+                  allAnswered = false;
+                  break;
+                }
+              }
+
+              if (!allAnswered) {
+                alert('Please answer all questions before submitting!');
+                return;
+              }
+
+              // Show loading state
+              submitBtn.textContent = 'Submitting...';
+              submitBtn.disabled = true;
+
+              try {
+                console.log('📤 Submitting quiz answers:', answers);
+                
+                // Submit to your API
+                const response = await axios.post('http://localhost:3000/api/quiz/submit', {
+                  answers: answers
+                }, {
+                  headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('learnify_token')}`,
+                    'Content-Type': 'application/json'
+                  },
+                  timeout: 15000
+                });
+
+                console.log('✅ Quiz submission response:', response.data);
+
+                if (response.status === 200) {
+                  const result = response.data;
+                  
+                  // Update coin display immediately
+                  const coinCountEls = document.querySelectorAll('#coin-count');
+                  coinCountEls.forEach(el => {
+                    const currentCoins = parseInt(el.textContent) || 0;
+                    const newTotal = currentCoins + (result.coinsAdded || 0);
+                    el.textContent = newTotal;
+                  });
+
+                  // Update localStorage user data
+                  const userData = JSON.parse(localStorage.getItem('learnify_user') || '{}');
+                  userData.coins = (userData.coins || 0) + (result.coinsAdded || 0);
+                  localStorage.setItem('learnify_user', JSON.stringify(userData));
+
+                  // Show results popup
+                  document.getElementById('popupMessage').textContent = 
+                    `You scored ${result.score}/${result.total} (${Math.round((result.score/result.total)*100)}%)`;
+                  
+                  document.getElementById('coinMessage').innerHTML = result.passed 
+                    ? `🎉 <strong>Congratulations!</strong> You earned ${result.coinsAdded} coins!`
+                    : `😔 You didn't pass this time. You need at least ${Math.ceil(result.total/2)} correct answers to earn coins.`;
+
+                  popupOverlay.style.display = 'flex';
+                  
+                } else {
+                  throw new Error('Unexpected response status');
+                }
+
+              } catch (error) {
+                console.error('❌ Error submitting quiz:', error);
+                
+                let errorMessage = 'Failed to submit quiz. Please try again.';
+                
+                if (error.response) {
+                  const status = error.response.status;
+                  const data = error.response.data;
+                  
+                  switch (status) {
+                    case 400:
+                      errorMessage = data.error || 'Invalid quiz submission.';
+                      break;
+                    case 401:
+                      errorMessage = 'Authentication failed. Please login again.';
+                      localStorage.removeItem('learnify_token');
+                      setTimeout(() => window.location.href = './learnifylogin.html', 2000);
+                      break;
+                    case 404:
+                      errorMessage = 'Quiz not found or expired. Please generate a new quiz.';
+                      break;
+                    case 500:
+                      errorMessage = 'Server error. Please try again later.';
+                      break;
+                    default:
+                      errorMessage = data.error || `Server error: ${status}`;
+                  }
+                } else if (error.request) {
+                  errorMessage = 'Cannot connect to server. Please check your internet connection.';
+                } else if (error.code === 'ECONNABORTED') {
+                  errorMessage = 'Request timed out. Please try again.';
+                }
+                
+                alert(errorMessage);
+                
+              } finally {
+                // Reset button state
+                submitBtn.textContent = 'Submit Quiz';
+                submitBtn.disabled = false;
+              }
+            };
+
+            questionContainer.appendChild(submitBtn);
+          });
+        </script>
+    </div>
+  </body>
+</html>

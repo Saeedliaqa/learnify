@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Dashboard - Learnify</title>
+  <link href="./output.css" rel="stylesheet" />
+  <link rel="stylesheet" href="Learnify.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+    rel="stylesheet" />
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <!-- Axios CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+  
+  <!-- 🔗 Shared Authentication -->
+  <script src="./auth.js"></script>
+</head>
+
+<body>
+  <!-- 📡 Navbar will be loaded here by shared-auth.js -->
+  
+  <div>
+    <!-- Main Content Section -->
+    <section class="h-[35vh] bg-white flex flex-col md:flex-row justify-center mb-8 sm:mb-4 md:mb-8 px-4 md:px-0">
+      <div
+        class="relative h-56 w-full md:w-[48rem] bg-[#212121] rounded-3xl flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 mt-8 px-6">
+        <div
+          class="absolute inset-0 rounded-3xl border-4 border-[#308fe8] animate-pulse opacity-100 pointer-events-none">
+        </div>
+
+        <!-- User Info -->
+        <div class="text-white space-y-1 text-center md:text-left">
+          <h2 class="text-lg md:text-2xl font-semibold">
+            Name: <span id="user-name">Loading...</span>
+          </h2>
+          <h2 class="text-lg md:text-2xl font-semibold">
+            Badge: <span id="user-badge">Loading...</span>
+          </h2>
+          <h2 class="text-lg md:text-2xl font-semibold">
+            Quiz Taken: <span id="quiz-count">Loading...</span>
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Quizzes Section -->
+    <section class="h-[60vh] bg-[#212121] mt-5 rounded-3xl p-4 md:p-6 text-white flex flex-col mb-5 mr-5 ml-5 ">
+      <h2 class="text-lg md:text-xl font-semibold mb-4 text-center md:text-left">Recent Quizzes</h2>
+
+      <!-- Table container with horizontal scroll on sm -->
+      <div class="overflow-x-auto flex-1">
+        <table class="w-full min-w-[600px] text-left table-auto">
+          <thead class="bg-[#2a2a2a] sticky top-0">
+            <tr>
+              <th class="px-3 py-2 text-sm md:text-base">S.No</th>
+              <th class="px-3 py-2 text-sm md:text-base">Quiz ID</th>
+              <th class="px-3 py-2 text-sm md:text-base">Date</th>
+              <th class="px-3 py-2 text-sm md:text-base">Topic</th>
+              <th class="px-3 py-2 text-sm md:text-base">Level</th>
+              <th class="px-3 py-2 text-sm md:text-base">Score</th>
+            </tr>
+          </thead>
+          <tbody id="quiz-table-body" class="text-sm md:text-base">
+            <!-- JS will populate rows here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="mt-4 flex justify-center space-x-4">
+        <button id="prev-btn"
+          class="px-3 py-2 rounded-xl bg-[#308fe8] hover:bg-[#256dc4] disabled:opacity-50 text-sm md:text-base"
+          disabled>
+          Previous
+        </button>
+        <button id="next-btn" class="px-3 py-2 rounded-xl bg-[#308fe8] hover:bg-[#256dc4] text-sm md:text-base">
+          Next
+        </button>
+      </div>
+    </section>
+
+    <script>
+      // 🔧 Page-specific functionality
+      document.addEventListener('DOMContentLoaded', function() {
+          // Wait for auth to complete, then update user-specific data
+          const waitForAuth = setInterval(() => {
+              if (window.currentUser) {
+                  updatePageSpecificData(window.currentUser);
+                  clearInterval(waitForAuth);
+              }
+          }, 100);
+
+          // 📊 Sample quiz data for demonstration
+          populateQuizTable();
+      });
+
+      // Function to update user-specific data for this page
+      function updatePageSpecificData(user) {
+          try {
+              // Update user name
+              const userNameEl = document.getElementById('user-name');
+              if (userNameEl) {
+                  userNameEl.textContent = user.name || 'User';
+              }
+              
+              // Update user badge based on coins
+              const userBadgeEl = document.getElementById('user-badge');
+              if (userBadgeEl) {
+                  let badge = 'Bronze';
+                  if (user.coins >= 100) badge = 'Gold';
+                  else if (user.coins >= 50) badge = 'Silver';
+                  userBadgeEl.textContent = badge;
+              }
+              
+              // Update quiz count (you can get this from API later)
+              const quizCountEl = document.getElementById('quiz-count');
+              if (quizCountEl) {
+                  quizCountEl.textContent = user.quizzesTaken || '5'; // Sample data
+              }
+              
+              console.log('✅ User dashboard data updated');
+          } catch (error) {
+              console.error('Error updating page-specific data:', error);
+          }
+      }
+
+      // Function to populate quiz table with sample data
+      function populateQuizTable() {
+          const sampleQuizData = [
+              { id: 'Q001', date: '2025-01-14', topic: 'JavaScript', level: 'Intermediate', score: '8/10' },
+              { id: 'Q002', date: '2025-01-13', topic: 'HTML/CSS', level: 'Beginner', score: '9/10' },
+              { id: 'Q003', date: '2025-01-12', topic: 'React', level: 'Advanced', score: '7/10' },
+              { id: 'Q004', date: '2025-01-11', topic: 'Node.js', level: 'Intermediate', score: '8/10' },
+              { id: 'Q005', date: '2025-01-10', topic: 'Python', level: 'Beginner', score: '10/10' }
+          ];
+
+          const tableBody = document.getElementById('quiz-table-body');
+          if (tableBody) {
+              sampleQuizData.forEach((quiz, index) => {
+                  const row = document.createElement('tr');
+                  row.className = 'border-b border-gray-600 hover:bg-[#2a2a2a] transition-colors';
+                  row.innerHTML = `
+                      <td class="px-3 py-3">${index + 1}</td>
+                      <td class="px-3 py-3 font-mono">${quiz.id}</td>
+                      <td class="px-3 py-3">${quiz.date}</td>
+                      <td class="px-3 py-3">
+                          <span class="px-2 py-1 bg-[#308fe8] rounded-full text-xs">${quiz.topic}</span>
+                      </td>
+                      <td class="px-3 py-3">
+                          <span class="px-2 py-1 ${getLevelColor(quiz.level)} rounded-full text-xs">${quiz.level}</span>
+                      </td>
+                      <td class="px-3 py-3 font-semibold ${getScoreColor(quiz.score)}">${quiz.score}</td>
+                  `;
+                  tableBody.appendChild(row);
+              });
+          }
+      }
+
+      // Helper function to get level color
+      function getLevelColor(level) {
+          switch(level.toLowerCase()) {
+              case 'beginner': return 'bg-green-600';
+              case 'intermediate': return 'bg-yellow-600';
+              case 'advanced': return 'bg-red-600';
+              default: return 'bg-gray-600';
+          }
+      }
+
+      // Helper function to get score color
+      function getScoreColor(score) {
+          const scoreNum = parseInt(score.split('/')[0]);
+          const total = parseInt(score.split('/')[1]);
+          const percentage = (scoreNum / total) * 100;
+          
+          if (percentage >= 80) return 'text-green-400';
+          if (percentage >= 60) return 'text-yellow-400';
+          return 'text-red-400';
+      }
+    </script>
+  </div>
+</body>
+
+</html>

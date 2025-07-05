@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+#hero-content button {
+    background-color: #ffffff;
+    color: #212121;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    font-size: 1rem;
+    box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.6); /* Soft White Glow */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  #hero-content button:hover {
+    box-shadow: 0 0 25px 10px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+  }
+
+
+
+  #mainContainer button {
+    background-color: #ffffff;
+    color: #212121;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    font-size: 1rem;
+    box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.6); /* Soft White Glow */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  #mainContainer button:hover {
+    box-shadow: 0 0 25px 10px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+  }
+
+
+
+ 
+  .floating2 {
+    animation: randomFloat ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  
+  /* Custom delays */
+  .delay-0 { animation-delay: 0s; }
+  .delay-0_5 { animation-delay: 0.5s; }
+  .delay-1 { animation-delay: 1s; }
+  .delay-1_5 { animation-delay: 1.5s; }
+  .delay-2 { animation-delay: 2s; }
+  .delay-2_5 { animation-delay: 2.5s; }
+  .delay-3 { animation-delay: 3s; }
+  .delay-4 { animation-delay: 4s; }
+  
+  /* Custom durations */
+  .duration-12 { animation-duration: 12s; }
+  .duration-13 { animation-duration: 13s; }
+  .duration-14 { animation-duration: 14s; }
+  .duration-15 { animation-duration: 15s; }
+  .duration-16 { animation-duration: 16s; }
+  
+  @keyframes randomFloat {
+    0%   { transform: translate(0px, 0px) rotate(0deg); }
+    25%  { transform: translate(50px, -30px) rotate(5deg); }
+    50%  { transform: translate(-30px, 50px) rotate(-5deg); }
+    75%  { transform: translate(40px, 30px) rotate(3deg); }
+    100% { transform: translate(0px, 0px) rotate(0deg); }
+  }
+
+
+
+  .slide {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.5s ease;
+  }
+
+  .show {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Apply fade-in animation */
+  .animate-card {
+    animation: fadeIn 1s ease-out forwards;
+  }
+
+  /* Set initial opacity to 0 for all cards */
+  .opacity-0 {
+    opacity: 0;
+  }
+
+  /* Apply animation delay for each card */
+  .card {
+    opacity: 0;
+  }
+
+
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+
+
+  
+  @keyframes shimmer-hero {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  
+  .shimmer-effect-hero {
+    background: linear-gradient(to right, #212121, #ffffff, #679cf3);
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent; /* FIX the bottom cut-off */
+     /* for extra support */
+    animation: shimmer-hero 12s linear infinite;
+  }
+ 
+
+  @keyframes shimmer {
+    0% {
+      background-position: -500px 0;
+    }
+    100% {
+      background-position: 500px 0;
+    }
+  }
+  .shimmer-text {
+    background: linear-gradient(to right, #212121, #ffffff, #679cf3);
+    background-size: 1000px 100%;
+    background-clip: text;
+    -webkit-text-fill-color: text;
+    color:  transparent;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 07s linear infinite;
+  }
+  
+
+  
+#coin-display {
+  position: relative;
+  z-index: 50;
+  background-color: #212121;
+}
+

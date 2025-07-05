@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learnify.</title>
+    <link href="./output.css" rel="stylesheet" />
+    <link rel="stylesheet" href="Learnify.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <!-- Axios CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="h-20 flex items-center justify-between px-8 py-4 bg-white">
+      <!-- Left Section (Logo) -->
+      <div class="flex items-center">
+        <span class="text-4xl font-bold text-[#212121]">Learnify.</span>
+      </div>
+
+      <!-- Mobile Menu Button (only visible on mobile) -->
+      <button id="mobile-menu-button" class="lg:hidden text-[#212121]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          class="w-8 h-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+
+      <!-- Desktop Navigation (hidden on mobile) -->
+      <div
+        class="hidden lg:flex lg:items-center lg:justify-between lg:flex-1 lg:ml-12"
+      >
+        <ul
+          class="flex items-center gap-8 text-[#212121] text-lg font-semibold self-center mt-2.5"
+        >
+          <li class="hover:text-[#308fe8]"><a href="#hero">Home</a></li>
+          <li class="hover:text-[#308fe8]"><a href="#features-section">Features</a></li>
+          <li class="hover:text-[#308fe8]"><a href="#demo-section">Try Demo</a></li>
+        </ul>
+
+        <!-- Right Section (Login/Signup Buttons) -->
+        <ul class="flex items-center gap-4 text-[#212121] text-lg">
+          <li>
+            <button
+              class="bg-[#212121] text-white font-semibold px-5 py-2 rounded-3xl hover:bg-[#308fe8] transition-all"
+            >
+            <a href="./learnifylogin.html">
+              Login</a>
+            </button>
+          </li>
+          <li>
+            <button
+              class="bg-[#212121] text-white font-semibold px-5 py-2 rounded-3xl hover:bg-[#308fe8] transition-all"
+            >
+            <a href="./Learnifysignup.html">
+              Sign-Up</a>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu (hidden by default) -->
+    <div id="mobile-menu" class="hidden bg-white py-4 px-8 lg:hidden">
+      <ul class="flex flex-col gap-4 text-[#212121] text-lg font-semibold mb-4">
+        <li class="hover:text-[#308fe8]"><a href="#hero">Home</a></li>
+        <li class="hover:text-[#308fe8]"><a href="#features-section">Features</a></li>
+        <li class="hover:text-[#308fe8]"><a href="#demo-section">Try Demo</a></li>
+      </ul>
+
+      <div class="flex flex-col gap-3">
+        <button
+          class="bg-[#212121] text-white font-semibold px-5 py-2 rounded-3xl hover:bg-[#308fe8] w-full transition-all"
+        >
+          <a href="./learnifylogin.html">Login</a>
+        </button>
+        <button
+          class="bg-[#212121] text-white font-semibold px-5 py-2 rounded-3xl hover:bg-[#308fe8] w-full transition-all"
+        >
+          <a href="./Learnifysignup.html">Sign-Up</a>
+        </button>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="h-[90vh] bg-white flex flex-col">
+      <header
+        id="hero"
+        class="flex-1 bg-[#212121] relative flex items-center justify-center overflow-hidden"
+      >
+        <!-- Floating Images (hidden on small screens) -->
+        <div class="absolute inset-0 pointer-events-none hidden md:block">
+          <img
+            src="./images/1.png"
+            class="floating2 absolute top-10 left-10 w-28 h-28 delay-0 duration-12"
+          />
+          <img
+            src="./images/2.png"
+            class="floating2 absolute top-10 left-1/2 w-32 h-32 delay-1 duration-14"
+          />
+          <img
+            src="./images/3.png"
+            class="floating2 absolute top-10 right-10 w-28 h-28 delay-2 duration-13"
+          />
+          <img
+            src="./images/4.png"
+            class="floating2 absolute top-1/2 left-10 w-32 h-32 delay-1_5 duration-15"
+          />
+          <img
+            src="./images/5.png"
+            class="floating2 absolute top-1/2 right-10 w-36 h-36 delay-0_5 duration-14"
+          />
+          <img
+            src="./images/6.png"
+            class="floating2 absolute bottom-20 left-1/4 w-28 h-28 delay-2_5 duration-12"
+          />
+          <img
+            src="./images/7.png"
+            class="floating2 absolute bottom-10 left-10 w-32 h-32 delay-3 duration-13"
+          />
+          <img
+            src="./images/8.png"
+            class="floating2 absolute bottom-10 right-10 w-28 h-28 delay-4 duration-14"
+          />
+          <img
+            src="./images/9.png"
+            class="floating2 absolute bottom-1/6 right-1/4 w-32 h-32 delay-2 duration-15"
+          />
+          <img
+            src="./images/10.png"
+            class="floating2 absolute top-15 right-1/4 w-28 h-28 delay-1 duration-16"
+          />
+        </div>
+
+        <!-- Hero Text -->
+        <div
+          id="hero-content"
+          class="text-center p-6 sm:p-8 md:p-10 relative z-10 overflow-hidden"
+        >
+          <h1
+            id="hero-heading"
+            class="text-white font-bold mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl shimmer-effect-hero"
+          >
+            <span class="block sm:inline leading-tight"
+              >"Level Up Your Learning</span
+            >
+            <span class="block sm:inline leading-tight">with Learnify"</span>
+          </h1>
+
+          <p
+            class="text-lg sm:text-xl md:text-2xl italic text-white font-light leading-snug"
+          >
+            Discover personalized, AI-powered quizzes designed to match your
+            <br class="hidden sm:block" />
+            pace, style, and goals — because smart learners deserve smarter
+            tools.
+          </p>
+
+          <button
+            id="get-started"
+            class="mt-6 px-6 py-3 bg-white text-[#212121] font-semibold rounded-3xl hover:scale-105 transition-all"
+            onclick="document.getElementById('demo-section').scrollIntoView({behavior: 'smooth'})"
+          >
+            Get Started
+          </button>
+        </div>
+      </header>
+    </div>
+
+    <!-- Feature Section starts from here! -->
+    <section class="h-auto bg-white py-8" id="features-section">
+      <div class="mb-10 px-4 text-center">
+        <h2
+          id="shimmer-text"
+          class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#212121] shimmer-text"
+        >
+          Features That Make Learnify Smarter, Faster, and More Fun.
+        </h2>
+      </div>
+
+      <!-- Cards Wrapper -->
+      <div class="flex flex-wrap justify-center gap-6 px-4">
+        <!-- First Card -->
+        <div
+          class="bg-gradient-to-t from-[#212121] to-[#012547] w-[45%] sm:w-[45%] md:w-2xs h-60 rounded-3xl flex flex-col items-center justify-center text-center gap-1"
+          data-aos="fade-up"
+          data-aos-delay="0"
+        >
+          <img src="./images/card1.png" class="w-24 sm:w-28" alt="" />
+          <h2
+            class="text-lg sm:text-xl md:text-2xl font-semibold text-white p-2"
+          >
+            AI Based Question Generation
+          </h2>
+        </div>
+
+        <!-- Second Card -->
+        <div
+          class="bg-gradient-to-t from-[#212121] to-[#012547] w-[45%] sm:w-[45%] md:w-2xs h-60 rounded-3xl flex flex-col items-center justify-center text-center gap-1"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
+          <img
+            src="./images/Untitled design (4).png"
+            class="w-24 sm:w-28"
+            alt=""
+          />
+          <h2
+            class="text-lg sm:text-xl md:text-2xl font-semibold text-white p-2"
+          >
+            Custom Difficulty Level
+          </h2>
+        </div>
+
+        <!-- Third Card -->
+        <div
+          class="bg-gradient-to-t from-[#212121] to-[#012547] w-[45%] sm:w-[45%] md:w-2xs h-60 rounded-3xl flex flex-col items-center justify-center text-center gap-1"
+          data-aos="fade-up"
+          data-aos-delay="400"
+        >
+          <img
+            src="./images/Untitled design (5).png"
+            class="w-24 sm:w-28"
+            alt=""
+          />
+          <h2
+            class="text-lg sm:text-xl md:text-2xl font-semibold text-white p-2"
+          >
+            Personalized Content
+          </h2>
+        </div>
+
+        <!-- Fourth Card -->
+        <div
+          class="bg-gradient-to-t from-[#212121] to-[#012547] w-[45%] sm:w-[45%] md:w-2xs h-60 rounded-3xl flex flex-col items-center justify-center text-center gap-1"
+          data-aos="fade-up"
+          data-aos-delay="600"
+        >
+          <img
+            src="./images/Untitled design (6).png"
+            class="w-24 sm:w-28"
+            alt=""
+          />
+          <h2
+            class="text-lg sm:text-xl md:text-2xl font-semibold text-white p-2"
+          >
+            Awards & Badges
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- Working Section Starts from here -->
+    <section class="h-auto bg-white flex justify-center py-8">
+      <div
+        class="flex flex-col-reverse md:flex-row items-center justify-between px-4 w-full"
+      >
+        <!-- Video Section -->
+        <div class="relative w-full sm:w-11/12 md:w-3xl md:ml-8 mt-4 md:mt-0">
+          <video
+            src="./images/COMPUTER SCIENCE (1).mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            class="rounded-3xl w-full h-auto"
+          ></video>
+          <!-- Glowing Border -->
+          <div
+            class="absolute inset-0 rounded-3xl border-4 border-[#308fe8] animate-pulse opacity-100 pointer-events-none"
+          ></div>
+        </div>
+
+        <!-- Text Section -->
+        <div class="mt-2 md:mt-0 md:mr-20 text-center md:text-left">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-[#212121]">
+            "Why Learnify? <br />Because One-Size <br />Doesn't Fit All."
+          </h2>
+          <p class="italic font-normal text-base sm:text-lg mt-3">
+            Learnify uses AI to craft quizzes that adapt to <br />
+            you — making learning faster, smarter, and <br />
+            actually fun
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!--Review section -->
+    <section
+      class="h-[60vh] bg-white hidden md:flex items-center justify-center overflow-hidden "
+    >
+      <div class="flex gap-8 m-5">
+        <!-- Review 1 -->
+        <div class="relative" data-aos="fade-up" data-aos-delay="0">
+          <img src="./images/Untitled design (8).png" class="w-2xs" alt="" />
+        </div>
+
+        <!-- Review 2 -->
+        <div class="relative top-6" data-aos="fade-up" data-aos-delay="200">
+          <img src="./images/Untitled design (10).png" class="w-2xs" alt="" />
+        </div>
+
+        <!-- Review 3 -->
+        <div class="relative" data-aos="fade-up" data-aos-delay="400">
+          <img src="./images/Untitled design (8).png" class="w-2xs" alt="" />
+        </div>
+
+        <!-- Review 4 -->
+        <div class="relative top-6" data-aos="fade-up" data-aos-delay="600">
+          <img src="./images/Untitled design (10).png" class="w-2xs" alt="" />
+        </div>
+
+        <!-- Review 5 -->
+        <div class="relative" data-aos="fade-up" data-aos-delay="800">
+          <img src="./images/Untitled design (8).png" class="w-2xs" alt="" />
+        </div>
+      </div>
+    </section>
+
+   <!-- Quiz Generator Demo Section -->
+<section
+  id="demo-section"
+  class="relative min-h-[80vh] bg-[#212121] flex items-center justify-center rounded-3xl mx-4 sm:mx-6 md:mx-8 my-8 py-8"
+>
+  <!-- Glowing Border -->
+  <div
+    class="absolute inset-0 rounded-3xl border-4 border-[#308fe8] animate-pulse opacity-100 pointer-events-none"
+  ></div>
+
+  <div
+    class="flex flex-col items-center justify-center w-[95%] sm:w-[90%] space-y-6 sm:space-y-10"
+    id="mainContainer"
+  >
+    <!-- Topic Input and Generate Button -->
+    <div class="flex flex-col items-center space-y-4 sm:space-y-6" id="inputContainer">
+      <h3 class="text-2xl sm:text-3xl md:text-4xl font-bold italic shimmer-text leading-snug sm:leading-tight text-center px-2">
+        "Try Learnify's Quiz Creation - A Quick Demo Experience!"
+      </h3>
+      <input
+        id="topicInput"
+        type="text"
+        placeholder="Enter Topic (e.g., JavaScript, History, Biology)"
+        class="w-[90%] sm:w-3/4 mt-2 sm:mt-4 p-4 sm:p-6 py-3 sm:py-4 rounded-xl text-base sm:text-lg text-center text-[#212121] bg-white border border-white placeholder-[#212121] focus:outline-none focus:ring-2 focus:ring-[#308fe8] transition-all"
+      />
+      <button
+        onclick="generateDemoQuestion()"
+        id="getQuestion"
+        class="mt-4 sm:mt-6 px-5 sm:px-6 py-2 sm:py-3 bg-white text-[#212121] font-semibold rounded-3xl text-base sm:text-lg hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        🚀 Generate Demo Question
+      </button>
+    </div>
+
+    <!-- Where the question will appear -->
+    <div
+      class="w-full max-w-4xl space-y-6 items-center hidden relative z-10"
+      id="questionContainer"
+    >
+      <!-- Question content will be populated here -->
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Section -->
+<section
+  class="bg-white flex flex-col md:flex-row items-center justify-between rounded-3xl mx-4 sm:mx-6 md:mx-8 my-8 py-10 md:py-0 h-auto md:h-[70vh]"
+>
+  <!-- Left: Text + Sign-Up Button -->
+  <div class="w-full md:w-3/5 px-4 sm:px-8 space-y-4 sm:space-y-6 text-center md:text-left">
+    <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-black leading-snug sm:leading-tight">
+      Ready to Challenge <br />
+      Yourself with Fun Quizzes?
+    </h2>
+    <p class="text-base sm:text-lg italic text-gray-700">
+      Join Learnify today and start your journey toward smarter, quicker
+      thinking with engaging quizzes!
+    </p>
+    <div class="flex justify-center md:justify-start">
+      <button
+        class="bg-black text-white text-base sm:text-lg font-semibold py-3 px-6 sm:py-4 sm:px-8 rounded-full hover:bg-blue-700 transition-all hover:scale-105"
+      >
+      <a href="./Learnifysignup.html">
+        Sign Up Now</a>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right: Image -->
+  <div class="w-full md:w-1/3 flex justify-center items-center mt-6 md:mt-0 px-4">
+    <img
+      src="./images/Untitled design (14).png"
+      alt="Quiz illustration"
+      class="h-64 sm:h-80 md:h-[26rem] rounded-xl object-contain"
+    />
+  </div>
+</section>
+
+    <footer
+      class="h-[80vh] bg-[#121212] text-white flex flex-col justify-between px-12 py-16 rounded-3xl mx-8 mb-8"
+    >
+      <!-- Top Section: Learnify Info & Links -->
+      <div class="flex justify-between items-start flex-wrap gap-12">
+        <!-- Learnify Info -->
+        <div class="space-y-4 max-w-sm">
+          <h2 class="text-3xl font-bold shimmer-text">Learnify</h2>
+          <p class="text-gray-400 text-lg italic">
+            Your gateway to interactive, AI-powered learning experiences. Build
+            quizzes, test knowledge, and have fun.
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="space-y-3">
+          <h3 class="text-xl font-semibold">Quick Links</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#hero" class="hover:text-white transition">Home</a></li>
+            <li><a href="#features-section" class="hover:text-white transition">Features</a></li>
+            <li><a href="#demo-section" class="hover:text-white transition">Demo</a></li>
+          </ul>
+        </div>
+
+        <!-- Social Media -->
+        <div class="space-y-3">
+          <h3 class="text-xl font-semibold">Follow Us</h3>
+          <div class="flex space-x-4 text-gray-400">
+            <a href="#" class="hover:text-white transition"
+              ><i class="fab fa-twitter"></i> Twitter</a
+            >
+            <a href="#" class="hover:text-white transition"
+              ><i class="fab fa-github"></i> GitHub</a
+            >
+            <a href="#" class="hover:text-white transition"
+              ><i class="fab fa-instagram"></i> Instagram</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section: Copyright -->
+      <div
+        class="text-center text-gray-500 text-sm border-t border-gray-700 pt-6"
+      >
+        © 2025 Learnify. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+      // Global variables for demo quiz
+      let currentDemoQuestion = null;
+      let userDemoAnswer = null;
+
+      // Add styled alert function
+      function showStyledAlert(message, type = 'info') {
+        const alertDiv = document.createElement('div');
+        const bgColor = type === 'success' ? 'bg-green-500' : type === 'warning' ? 'bg-yellow-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+        
+        alertDiv.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full`;
+        alertDiv.innerHTML = `
+          <div class="flex items-center space-x-2">
+            <span>${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : type === 'error' ? '❌' : 'ℹ️'}</span>
+            <span>${message}</span>
+          </div>
+        `;
+        
+        document.body.appendChild(alertDiv);
+        setTimeout(() => alertDiv.classList.remove('translate-x-full'), 100);
+        setTimeout(() => {
+          alertDiv.classList.add('translate-x-full');
+          setTimeout(() => document.body.removeChild(alertDiv), 300);
+        }, 4000);
+      }
+
+      // 🧠 Demo Question Generation Function
+      async function generateDemoQuestion() {
+  const topicInput = document.getElementById('topicInput');
+  const generateBtn = document.getElementById('getQuestion');
+  const questionContainer = document.getElementById('questionContainer');
+  const inputContainer = document.getElementById('inputContainer');
+
+  const topic = topicInput.value.trim();
+
+  if (!topic) {
+    showStyledAlert('Please enter a topic first!', 'warning');
+    topicInput.focus();
+    return;
+  }
+
+  if (topic.length < 3) {
+    showStyledAlert('Topic must be at least 3 characters long', 'warning');
+    topicInput.focus();
+    return;
+  }
+
+  // Show loading state
+  const originalText = generateBtn.innerHTML;
+  generateBtn.innerHTML = `
+    <div class="flex items-center justify-center">
+      <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-[#212121]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      🤖 AI is generating...
+    </div>
+  `;
+  generateBtn.disabled = true;
+  topicInput.disabled = true;
+
+  try {
+    console.log(`🔄 Generating demo question for topic: ${topic}`);
+
+    // Call your backend API for single question generation
+    const response = await axios.post('http://localhost:3000/api/quiz/generate-question', {
+      topic: topic,
+      level: 'intermediate' // Default level for demo
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000 // 30 second timeout
+    });
+
+    if (response.status === 200 && response.data.question) {
+      console.log('✅ Demo question generated successfully:', response.data);
+
+      const question = response.data.question;
+      currentDemoQuestion = question;
+
+      // Store correct answer for local checking
+      localStorage.setItem('demoQuestionData', JSON.stringify({
+        question: question,
+        correctIndex: question.correctIndex,
+        topic: topic
+      }));
+
+      // Display the question
+      displayDemoQuestion(question, topic);
+      
+      // Hide input container and show question container
+      inputContainer.style.display = 'none';
+      questionContainer.classList.remove('hidden');
+      questionContainer.style.display = 'flex';
+      questionContainer.style.flexDirection = 'column';
+
+      showStyledAlert('Question generated successfully!', 'success');
+
+    } else {
+      throw new Error('Invalid response format from server');
+    }
+
+  } catch (error) {
+    console.error('❌ Error generating demo question:', error);
+
+    let errorMessage = 'Failed to generate demo question. Please try again.';
+    let errorType = 'error';
+    
+    if (error.response) {
+      const status = error.response.status;
+      const data = error.response.data;
+      
+      switch (status) {
+        case 400:
+          errorMessage = data.error || 'Invalid topic. Please try a different topic.';
+          errorType = 'warning';
+          break;
+        case 429:
+          errorMessage = 'Too many requests. Please wait a moment and try again.';
+          errorType = 'warning';
+          break;
+        case 500:
+          errorMessage = 'Server error. Please try again later.';
+          break;
+        default:
+          errorMessage = data.error || `Server error: ${status}`;
+      }
+    } else if (error.request) {
+      errorMessage = 'Cannot connect to server. Please check your internet connection.';
+    } else if (error.code === 'ECONNABORTED') {
+      errorMessage = 'Request timed out. Please try again.';
+      errorType = 'warning';
+    }
+
+    showStyledAlert(errorMessage, errorType);
+
+  } finally {
+    // Reset button state
+    generateBtn.innerHTML = originalText;
+    generateBtn.disabled = false;
+    topicInput.disabled = false;
+  }
+}
+      
+      // Function to display the demo question
+      function displayDemoQuestion(question, topic) {
+        const questionContainer = document.getElementById('questionContainer');
+        
+        questionContainer.innerHTML = `
+          <div class="w-full bg-white rounded-3xl p-6 text-[#212121] overflow-hidden relative z-10 mx-auto">
+            <div class="text-center mb-6">
+              <h4 class="text-xl font-bold text-[#308fe8] mb-2 ">Demo Question - ${topic}</h4>
+              <p class="text-sm text-gray-600">This is a sample of what Learnify can generate for you!</p>
+            </div>
+            
+            <div class="mb-6" id="questionContent">
+              <h3 class="text-lg font-semibold mb-4">${question.question}</h3>
+              
+              <div class="space-y-3" id="optionsContainer">
+                ${question.options.map((option, index) => `
+                  <label class="flex items-center p-3 rounded-lg border-2 border-gray-200 hover:border-[#308fe8] hover:bg-blue-50 cursor-pointer transition-all option-label" data-index="${index}">
+                    <input type="radio" name="demo-question" value="${index}" class="mr-3 transform scale-125">
+                    <span class="text-base">${option}</span>
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+            
+            <!-- Result Container (initially hidden) -->
+            <div id="resultContainer" class="hidden mb-6">
+              <!-- Result will be inserted here -->
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center" id="actionButtons">
+              <button 
+                onclick="submitDemoAnswer()" 
+                id="submitDemoBtn"
+                class="bg-[#308fe8] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#256dc4] transition-all"
+              >
+                Submit Answer
+              </button>
+              <button 
+                onclick="resetDemo()" 
+                class="bg-gray-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-gray-600 transition-all"
+              >
+                Try Another Topic
+              </button>
+              <a href="./Learnifysignup.html" class="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-all text-center relative z-10">
+                Sign Up for Full Experience
+              </a>
+            </div>
+          </div>
+        `;
+      }
+
+      // Function to submit demo answer (local checking)
+      function submitDemoAnswer() {
+        const selectedAnswer = document.querySelector('input[name="demo-question"]:checked');
+        
+        if (!selectedAnswer) {
+          showStyledAlert('Please select an answer first!', 'warning');
+          return;
+        }
+
+        const userAnswerIndex = parseInt(selectedAnswer.value);
+        const demoData = JSON.parse(localStorage.getItem('demoQuestionData'));
+        
+        if (!demoData) {
+          showStyledAlert('Demo data not found. Please try again.', 'error');
+          return;
+        }
+
+        const isCorrect = userAnswerIndex === demoData.correctIndex;
+        const correctOption = demoData.question.options[demoData.correctIndex];
+
+        // Show result in the dedicated container
+        const resultContainer = document.getElementById('resultContainer');
+        const submitBtn = document.getElementById('submitDemoBtn');
+        
+        // Disable submit button and radio buttons
+        submitBtn.disabled = true;
+        document.querySelectorAll('input[name="demo-question"]').forEach(radio => {
+          radio.disabled = true;
+        });
+
+        // Highlight correct/incorrect options
+        document.querySelectorAll('.option-label').forEach((label, index) => {
+          const isSelected = index === userAnswerIndex;
+          const isCorrectOption = index === demoData.correctIndex;
+          
+          if (isCorrectOption) {
+            label.classList.add('border-green-500', 'bg-green-50');
+            label.classList.remove('border-gray-200', 'hover:border-[#308fe8]', 'hover:bg-blue-50');
+          } else if (isSelected && !isCorrect) {
+            label.classList.add('border-red-500', 'bg-red-50');
+            label.classList.remove('border-gray-200', 'hover:border-[#308fe8]', 'hover:bg-blue-50');
+          } else {
+            label.classList.add('opacity-60');
+            label.classList.remove('hover:border-[#308fe8]', 'hover:bg-blue-50');
+          }
+          label.classList.remove('cursor-pointer');
+          label.style.cursor = 'default';
+        });
+
+        // Show result in the dedicated container
+        resultContainer.innerHTML = `
+          <div class="p-6 rounded-xl text-center ${isCorrect ? 'bg-green-100 border-2 border-green-500' : 'bg-red-100 border-2 border-red-500'} transition-all duration-500">
+            <div class="text-4xl mb-3">${isCorrect ? '🎉' : '😔'}</div>
+            <h4 class="text-2xl font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'} mb-3">
+              ${isCorrect ? 'Correct!' : 'Incorrect!'}
+            </h4>
+            <p class="text-lg ${isCorrect ? 'text-green-600' : 'text-red-600'} mb-4">
+              ${isCorrect ? 'Well done! You got it right.' : `The correct answer was: "${correctOption}"`}
+            </p>
+            <p class="text-sm text-gray-600 text-center mx-auto max-w-lg">
+              ${isCorrect ? 'Ready for more challenges? Sign up to access unlimited AI-generated quizzes!' : 'Don\'t worry! Practice makes perfect. Sign up to improve with more quizzes!'}
+            </p>
+          </div>
+        `;
+        
+        // Show the result container with animation
+        resultContainer.classList.remove('hidden');
+        resultContainer.classList.add('animate-fadeIn');
+
+        // Update submit button
+        submitBtn.textContent = isCorrect ? '✅ Correct!' : '❌ Incorrect';
+        submitBtn.className = `font-semibold px-6 py-3 rounded-lg transition-all ${isCorrect ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`;
+      }
+
+      // Function to reset demo
+      function resetDemo() {
+        const questionContainer = document.getElementById('questionContainer');
+        const inputContainer = document.getElementById('inputContainer');
+        const topicInput = document.getElementById('topicInput');
+
+        // Hide question container and show input container
+        questionContainer.style.display = 'none';
+        questionContainer.classList.add('hidden');
+        inputContainer.style.display = 'flex';
+        inputContainer.style.flexDirection = 'column';
+
+        // Clear input and reset focus
+        topicInput.value = '';
+        topicInput.focus();
+
+        // Clear stored demo data
+        localStorage.removeItem('demoQuestionData');
+        currentDemoQuestion = null;
+        userDemoAnswer = null;
+
+        showStyledAlert('Demo reset! Try a new topic.', 'info');
+      }
+
+      // Mobile menu functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileMenuButton && mobileMenu) {
+          mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+          });
+
+          // Close mobile menu when clicking outside
+          document.addEventListener('click', function(event) {
+            if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+              mobileMenu.classList.add('hidden');
+            }
+          });
+        }
+
+        // Initialize AOS animations
+        if (typeof AOS !== 'undefined') {
+          AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+          });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+              target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          });
+        });
+
+        // Enhanced input validation for demo
+        const topicInput = document.getElementById('topicInput');
+        if (topicInput) {
+          topicInput.addEventListener('input', function() {
+            const value = this.value.trim();
+            if (value.length > 0 && value.length < 3) {
+              this.style.borderColor = '#f59e0b'; // Warning color
+            } else if (value.length >= 3) {
+              this.style.borderColor = '#10b981'; // Success color
+            } else {
+              this.style.borderColor = '#308fe8'; // Default color
+            }
+          });
+
+          // Add example topics on focus
+          topicInput.addEventListener('focus', function() {
+            if (!this.value) {
+              this.placeholder = 'e.g., JavaScript, World War 2, Photosynthesis, Shakespeare...';
+            }
+          });
+
+          topicInput.addEventListener('blur', function() {
+            if (!this.value) {
+              this.placeholder = 'Enter Topic (e.g., JavaScript, History, Biology)';
+            }
+          });
+
+          // Allow Enter key to generate question
+          topicInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              generateDemoQuestion();
+            }
+          });
+        }
+
+        // Add intersection observer for animations
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-fadeIn');
+            }
+          });
+        }, observerOptions);
+
+        // Observe sections for animations
+        document.querySelectorAll('section').forEach(section => {
+          observer.observe(section);
+        });
+      });
+
+      // Add CSS for animations
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .floating2 {
+          animation: randomFloat ease-in-out infinite alternate;
+          pointer-events: none;
+        }
+        
+        @keyframes randomFloat {
+          0%   { transform: translate(0px, 0px) rotate(0deg); }
+          25%  { transform: translate(50px, -30px) rotate(5deg); }
+          50%  { transform: translate(-30px, 50px) rotate(-5deg); }
+          75%  { transform: translate(40px, 30px) rotate(3deg); }
+          100% { transform: translate(0px, 0px) rotate(0deg); }
+        }
+        
+        .shimmer-effect-hero {
+          background: linear-gradient(to right, #ffffff, #308fe8, #ffffff);
+          background-size: 200% 100%;
+          background-clip: text;
+          -webkit-background-clip: text;
+          color: transparent;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer-hero 3s linear infinite;
+        }
+        
+        .shimmer-text {
+          background: linear-gradient(to right, #212121, #308fe8, #212121);
+          background-size: 200% 100%;
+          background-clip: text;
+          -webkit-background-clip: text;
+          color: transparent;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer 3s linear infinite;
+        }
+        
+        @keyframes shimmer-hero {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+        
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        
+        /* Custom delays and durations for floating images */
+        .delay-0 { animation-delay: 0s; }
+        .delay-0_5 { animation-delay: 0.5s; }
+        .delay-1 { animation-delay: 1s; }
+        .delay-1_5 { animation-delay: 1.5s; }
+        .delay-2 { animation-delay: 2s; }
+        .delay-2_5 { animation-delay: 2.5s; }
+        .delay-3 { animation-delay: 3s; }
+        .delay-4 { animation-delay: 4s; }
+        
+        .duration-12 { animation-duration: 12s; }
+        .duration-13 { animation-duration: 13s; }
+        .duration-14 { animation-duration: 14s; }
+        .duration-15 { animation-duration: 15s; }
+        .duration-16 { animation-duration: 16s; }
+        
+        /* Enhanced button hover effects */
+        #hero-content button, #mainContainer button {
+          box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.6);
+          transition: all 0.3s ease;
+        }
+        
+        #hero-content button:hover, #mainContainer button:hover {
+          box-shadow: 0 0 25px 10px rgba(255, 255, 255, 0.8);
+          transform: scale(1.05);
+        }
+
+        /* Better option styling */
+        .option-label {
+          transition: all 0.3s ease;
+        }
+
+        .option-label:hover {
+          transform: translateX(5px);
+        }
+
+        /* Result container styling */
+        #resultContainer {
+          transition: all 0.5s ease;
+        }
+
+        /* Toast notification z-index fix */
+        .fixed.top-4.right-4 {
+          z-index: 9999;
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
+    
+  </body>
+</html>

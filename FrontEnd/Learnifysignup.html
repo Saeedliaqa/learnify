@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify Sign-up page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <!-- Axios CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+    
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      
+      .shimmer-text {
+        background: linear-gradient(45deg, #212121, #308fe8, #212121);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 2s ease-in-out infinite;
+      }
+      
+      @keyframes shimmer {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+      
+      .animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+    </style>
+</head>
+<body>
+<!-- Login Page -->
+<section class="min-h-screen bg-[#212121] flex items-center justify-center px-4">
+    <div class="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl gap-10 mt-15 sm:mt-10">
+  
+      <!-- Left: Login Form -->
+      <div class="relative bg-[#ffffff] rounded-2xl px-8 py-10 w-full max-w-md">
+        <!-- Glowing Border -->
+        <div class="absolute inset-0 rounded-2xl border-4 border-[#308fe8] animate-pulse pointer-events-none"></div>
+  
+        <!-- Form Content -->
+        <form id="signupForm" class="relative z-10 flex flex-col space-y-6">
+          <h2 class="text-[#212121] text-3xl font-bold text-center shimmer-text">Sign-Up</h2>
+          
+          <!-- Error/Success Message -->
+          <div id="messageDiv" class="hidden p-3 rounded-lg text-center text-sm font-medium"></div>
+  
+          <input
+            id="fullName"
+            type="text"
+            placeholder="Enter Your Full Name"
+            class="w-full px-4 py-3 rounded-lg bg-[#212121] text-white text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#308fe8] transition-all duration-200"
+            required
+          />
+
+          <input
+            id="email"
+            type="email"
+            placeholder="Email Address"
+            class="w-full px-4 py-3 rounded-lg bg-[#212121] text-white text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#308fe8] transition-all duration-200"
+            required
+          />
+  
+          <input
+            id="password"
+            type="password"
+            placeholder="Password (min 6 characters)"
+            class="w-full px-4 py-3 rounded-lg bg-[#212121] text-white text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#308fe8] transition-all duration-200"
+            required
+            minlength="6"
+          />
+  
+          <button
+            type="submit"
+            id="submitBtn"
+            class="w-full bg-[#212121] text-white font-semibold py-3 rounded-lg hover:bg-[#308fe8] hover:text-white transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#308fe8] focus:ring-offset-2"
+          >
+            Create Account
+          </button>
+        </form>
+        
+        <!-- Login Link -->
+        <div class="text-center mt-6">
+          <p class="text-gray-600 text-sm">
+            Already have an account? 
+            <a href="./learnifylogin.html" class="text-[#308fe8] hover:underline font-medium">Sign In</a>
+          </p>
+        </div>
+      </div>
+  
+      <!-- Right: Image -->
+      <div class="w-full max-w-sm">
+        <div class="w-full h-64 bg-gradient-to-br from-[#308fe8] to-[#212121] rounded-xl flex items-center justify-center">
+          <div class="text-white text-center">
+            <div class="text-6xl mb-4">📚</div>
+            <h3 class="text-2xl font-bold mb-2">Welcome to Learnify</h3>
+            <p class="text-lg opacity-90">Start your learning journey today</p>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+</section>
+
+
+
+<!-- JS CODE -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const signupForm = document.getElementById('signupForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const messageDiv = document.getElementById('messageDiv');
+      
+      // Function to show messages
+      function showMessage(message, isError = false) {
+          messageDiv.textContent = message;
+          messageDiv.className = `p-3 rounded-lg text-center text-sm font-medium ${
+              isError 
+                  ? 'bg-red-100 text-red-700 border border-red-300' 
+                  : 'bg-green-100 text-green-700 border border-green-300'
+          }`;
+          messageDiv.classList.remove('hidden');
+          
+          // Auto-hide after 5 seconds
+          setTimeout(() => {
+              messageDiv.classList.add('hidden');
+          }, 5000);
+      }
+      
+      // Function to set loading state
+      function setLoadingState(isLoading) {
+          if (isLoading) {
+              submitBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creating Account...
+              `;
+              submitBtn.disabled = true;
+              submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          } else {
+              submitBtn.innerHTML = 'Create Account';
+              submitBtn.disabled = false;
+              submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+      }
+      
+      // Email validation function
+      function isValidEmail(email) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+      }
+      
+      // Handle form submission
+      signupForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          // Get form data
+          const fullName = document.getElementById('fullName').value.trim();
+          const email = document.getElementById('email').value.trim();
+          const password = document.getElementById('password').value;
+          
+          // Basic validation
+          if (!fullName || !email || !password) {
+              showMessage('Please fill in all fields', true);
+              return;
+          }
+          
+          if (!isValidEmail(email)) {
+              showMessage('Please enter a valid email address', true);
+              return;
+          }
+          
+          if (password.length < 6) {
+              showMessage('Password must be at least 6 characters long', true);
+              return;
+          }
+          
+          // Set loading state
+          setLoadingState(true);
+          
+          try {
+              // Send signup request to your backend API
+              const response = await axios.post('http://localhost:3000/api/auth/register', {
+                  fullName: fullName,
+                  email: email,
+                  password: password
+              }, {
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  timeout: 15000 // 15 second timeout
+              });
+              
+              // Handle successful response
+              if (response.status === 200 || response.status === 201) {
+                  showMessage('Account created successfully! Welcome to Learnify!', false);
+                  signupForm.reset(); // Clear the form
+                  
+                  // Optional: Redirect after successful signup
+                  setTimeout(() => {
+                      // window.location.href = '/login'; // Uncomment to redirect
+                  }, 2000);
+              }
+              
+          } catch (error) {
+              // Handle different types of errors
+              let errorMessage = 'Something went wrong. Please try again.';
+              
+              if (error.response) {
+                  // Server responded with error status
+                  const status = error.response.status;
+                  const data = error.response.data;
+                  
+                  switch (status) {
+                      case 400:
+                          errorMessage = data.message || 'Invalid input. Please check your details.';
+                          break;
+                      case 409:
+                          errorMessage = 'Email already exists. Please use a different email or try logging in.';
+                          break;
+                      case 422:
+                          errorMessage = data.message || 'Please provide valid information.';
+                          break;
+                      case 429:
+                          errorMessage = 'Too many requests. Please wait a moment and try again.';
+                          break;
+                      case 500:
+                      case 502:
+                      case 503:
+                          errorMessage = 'Server error. Please try again later.';
+                          break;
+                      default:
+                          errorMessage = data.message || `Error: ${status}`;
+                  }
+              } else if (error.request) {
+                  // Network error
+                  errorMessage = 'Unable to connect to server. Please check your internet connection and try again.';
+              } else if (error.code === 'ECONNABORTED') {
+                  // Timeout error
+                  errorMessage = 'Request timed out. Please check your connection and try again.';
+              }
+              
+              showMessage(errorMessage, true);
+              console.error('Signup error:', error);
+          } finally {
+              // Reset loading state
+              setLoadingState(false);
+          }
+      });
+      
+      // Initialize AOS if available
+      if (typeof AOS !== 'undefined') {
+          AOS.init({
+              duration: 800,
+              easing: 'ease-in-out',
+              once: true
+          });
+      }
+      
+      // Add input validation feedback
+      const inputs = ['fullName', 'email', 'password'];
+      inputs.forEach(inputId => {
+          const input = document.getElementById(inputId);
+          input.addEventListener('blur', function() {
+              if (this.value.trim() === '') {
+                  this.classList.add('border-red-500');
+              } else {
+                  this.classList.remove('border-red-500');
+              }
+          });
+      });
+  });
+</script>
+
+</body>  
+</html>
