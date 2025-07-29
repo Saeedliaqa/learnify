@@ -378,4 +378,43 @@ router.post("/submit", auth, async (req, res) => {
 
 
 
+
+router.get("/leaderboard", async (req, res) => {
+  try {
+    console.log('📊 Fetching leaderboard data...');
+
+    // Fetch all users sorted by coins in descending order
+    const users = await UserModel
+      .find({}, 'name email coins') // Only select name, email, and coins fields
+      .sort({ coins: -1 }) // Sort by coins descending
+      .limit(50); // Limit to top 50 users
+
+    // Format the response
+    const leaderboard = users.map((user, index) => ({
+      id: user._id,
+      rank: index + 1,
+      username: user.name,
+      email: user.email,
+      coins: user.coins || 0
+    }));
+
+    console.log(`✅ Leaderboard fetched: ${leaderboard.length} users`);
+
+    res.json({
+      success: true,
+      leaderboard: leaderboard,
+      totalPlayers: leaderboard.length,
+      lastUpdated: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('❌ Error fetching leaderboard:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch leaderboard data',
+      message: error.message
+    });
+  }
+});
+
 module.exports = router;
