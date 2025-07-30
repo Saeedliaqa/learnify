@@ -1,5 +1,5 @@
 // shared-auth.js - Shared Authentication and UI Functions
-
+const BackendHost = "https://learnify-production-be40.up.railway.app";
 // 🔐 Main authentication check function
 async function initializeAuth() {
     console.log('🔍 Starting authentication check...');
@@ -17,7 +17,7 @@ async function initializeAuth() {
     // Verify token with your backend API
     try {
         console.log('🔍 Verifying token with server...');
-        const response = await axios.get('http://localhost:3000/api/auth/me', {
+        const response = await axios.get(`${BackendHost}/api/auth/me`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -129,7 +129,7 @@ function startPeriodicTokenCheck() {
         }
 
         try {
-            await axios.get('http://localhost:3000/api/auth/me', {
+            await axios.get(`${BackendHost}/api/auth/me`, {
                 headers: { 'Authorization': `Bearer ${token}` },
                 timeout: 5000
             });
