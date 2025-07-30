@@ -10,9 +10,11 @@ async function initializeAuth() {
     if (!token) {
         console.log('❌ No token found - redirecting to login');
         alert('Please login to access this page');
-        window.location.href = './learnifylogin.html?error=no_token';
+        window.location.href = 'index.html';
         return false;
     }
+
+      
 
     // Verify token with your backend API
     try {
