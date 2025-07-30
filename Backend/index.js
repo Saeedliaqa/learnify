@@ -12,7 +12,7 @@ const app = express();
 const authMiddleware = require("./middlewares/auth.js");
 
 app.use(cors({
-  origin:"https://learnify-dun.vercel.app",       // Allows any origin (like app.use(cors()) but with more control)
+  origin: true,        // Allows any origin (like app.use(cors()) but with more control)
   credentials: true,   // Allows cookies, authorization headers, etc.
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
