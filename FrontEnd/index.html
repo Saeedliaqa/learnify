@@ -531,7 +531,7 @@
     console.log(`🔄 Generating demo question for topic: ${topic}`);
 
     // Call your backend API for single question generation
-    const response = await axios.post(`${BackendHost}api/quiz/generate-question`, {
+    const response = await axios.post(`${BackendHost}/api/quiz/generate-question`, {
       topic: topic,
       level: 'intermediate' // Default level for demo
     }, {

@@ -177,7 +177,7 @@
           try {
               console.log('📊 Fetching leaderboard data...');
               
-              const response = await axios.get('http://localhost:3000/api/quiz/leaderboard', {
+              const response = await axios.get(`${BackendHost}/api/quiz/leaderboard`, {
                   headers: {
                       'Authorization': `Bearer ${localStorage.getItem('learnify_token')}`
                   },
