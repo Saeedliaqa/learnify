@@ -1,6 +1,6 @@
 // Quiz Generation Integration Script
 // Configuration
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'learnify-production-be40.up.railway.app';
 
 // Generate question function - matches your existing onclick="generateQuestion()"
 async function generateQuestion() {

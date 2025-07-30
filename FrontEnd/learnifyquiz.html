@@ -37,7 +37,7 @@
           // Verify token with your backend API
           try {
               console.log('🔍 Verifying token with server...');
-              const response = await axios.get('http://localhost:3000/api/auth/me', {
+              const response = await axios.get(`${BackendHost}/api/auth/me`, {
                   headers: {
                       'Authorization': `Bearer ${token}`
                   },
@@ -208,6 +208,7 @@
 
         <script>
           // 🔧 Mobile menu functionality
+          const BackendHost = "learnify-production-be40.up.railway.app";
           document.addEventListener('DOMContentLoaded', function() {
               const mobileMenuToggle = document.getElementById('mobile-menu-toggle1');
               const mobileMenu = document.getElementById('mobile-menu1');
@@ -453,7 +454,7 @@
                 console.log('📤 Submitting quiz answers:', answers);
                 
                 // Submit to your API
-                const response = await axios.post('http://localhost:3000/api/quiz/submit', {
+                const response = await axios.post(`${BackendHost}/api/quiz/submit`, {
                   answers: answers
                 }, {
                   headers: {

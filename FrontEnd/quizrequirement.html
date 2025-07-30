@@ -98,6 +98,7 @@
         </header>
 
         <script>
+           const BackendHost = "learnify-production-be40.up.railway.app";
           // 🧠 Page-specific quiz generation functionality
           // This runs after authentication is complete
           
@@ -165,7 +166,7 @@
                 console.log(`🔄 Generating quiz for "${topic}" at ${level} level...`);
                 
                 // Send request to your backend API
-                const response = await axios.post('http://localhost:3000/api/quiz/generate', {
+                const response = await axios.post(`${BackendHost}/api/quiz/generate`, {
                   topic: topic,
                   level: level
                 }, {

@@ -123,6 +123,7 @@
 </section>
 
 <script>
+     const BackendHost = "learnify-production-be40.up.railway.app";
   document.addEventListener('DOMContentLoaded', function() {
       const loginForm = document.getElementById('loginForm');
       const submitBtn = document.getElementById('submitBtn');
@@ -136,7 +137,7 @@
           if (existingToken) {
               // Verify if the token is still valid
               try {
-                  const response = await axios.get('http://localhost:3000/api/auth/me', {
+                  const response = await axios.get(`${BackendHost}/api/auth/me`, {
                       headers: { 'Authorization': `Bearer ${existingToken}` },
                       timeout: 5000
                   });
@@ -263,7 +264,7 @@
               console.log('🔄 Attempting login for:', email);
               
               // Send login request to backend API
-              const response = await axios.post('http://localhost:3000/api/auth/login', {
+              const response = await axios.post(`${BackendHost}/api/auth/login`, {
                   email: email,
                   password: password
               }, {
