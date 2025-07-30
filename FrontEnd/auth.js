@@ -1,5 +1,5 @@
 // shared-auth.js - Shared Authentication and UI Functions
-const BackendHost = "https://learnify-production-be40.up.railway.app";
+let BackendHost = "https://learnify-production-be40.up.railway.app";
 // 🔐 Main authentication check function
 async function initializeAuth() {
     console.log('🔍 Starting authentication check...');
