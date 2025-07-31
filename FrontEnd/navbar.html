@@ -1,97 +1,137 @@
-<!-- Shared Navigation Component - navbar.html -->
-<nav class="h-20 flex items-center justify-between px-6 py-4 bg-white">
-    <!-- Left: Logo -->
-    <a href="index.html"><div class="text-4xl font-bold text-[#212121]">Learnify.</div></a>
-  
-    <!-- Right: Desktop (md and above) -->
-    <div class="md:flex items-center justify-between w-full px-8">
-      <ul class="flex items-center gap-8 text-[#212121] text-lg font-semibold mt-2.5">
-        <li class="hover:text-[#308fe8]"><a href="./learnifyuser.html">DashBoard</a></li>
-        <li class="hover:text-[#308fe8]"><a href="./quizrequirement.html">New Quiz</a></li>
-      </ul>
-  
-      <ul class="flex items-center gap-4 text-[#212121] text-lg mt-1">
-        <li>
-          <div
-            id="coin-display"
-            class="bg-[#212121] text-white font-semibold px-5 py-2 rounded-3xl whitespace-nowrap min-w-[80px]"
-          >
-            Coins: <span id="coin-count">Loading...</span>
-          </div>
-        </li>
-  
-        <li class="relative group">
-          <button class="px-2 py-2">
-            <img src="images/Untitled design (15).png" alt="User Icon" class="h-[2rem]" />
-          </button>
-          <ul
-            class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg hidden group-hover:block z-10 text-sm text-[#212121]"
-          >
-            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
-            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="logout()">Logout</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  
-    <!-- Right: Mobile -->
-    <div class="flex md:hidden items-center gap-4">
-      <div
-        id="coin-display-mobile"
-        class="bg-[#212121] text-white font-semibold px-4 py-1.5 rounded-3xl text-sm whitespace-nowrap min-w-[70px]"
-      >
-        Coins: <span id="coin-count">Loading...</span>
-      </div>
-  
-      <!-- Profile Icon as Toggle -->
-      <button id="mobile-menu-toggle1">
-        <img src="images/Untitled design (15).png" alt="User Icon" class="h-[1.5rem]" />
-      </button>
-    </div>
-  </nav>
-  
-  <!-- Mobile Dropdown Menu (hidden by default) -->
-  <div id="mobile-menu1" class="hidden bg-white py-4 px-8 md:hidden">
-    <ul class="flex flex-col gap-4 text-[#212121] text-lg font-semibold mb-4">
-      <li class="hover:text-[#308fe8]"><a href="./learnifyuser.html">DashBoard</a></li>
-      <li class="hover:text-[#308fe8]"><a href="./quizrequirement.html">New Quiz</a></li>
-      <li class="hover:text-[#308fe8] cursor-pointer">Settings</li>
-      <li class="hover:text-[#308fe8] cursor-pointer" onclick="logout()">Logout</li>
-    </ul>
-  </div>
-  
-  <script>
-     const BackendHost = "https://learnify-production-be40.up.railway.app";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify Navigation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
 
-  // 🔧 Shared navbar functionality
-  document.addEventListener('DOMContentLoaded', function() {
-      // Mobile menu toggle functionality
-      const mobileMenuToggle = document.getElementById('mobile-menu-toggle1');
-      const mobileMenu = document.getElementById('mobile-menu1');
-  
-      if (mobileMenuToggle && mobileMenu) {
-          mobileMenuToggle.addEventListener('click', function() {
-              mobileMenu.classList.toggle('hidden');
-          });
-  
-          // Close mobile menu when clicking outside
-          document.addEventListener('click', function(event) {
-              if (!mobileMenuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
-                  mobileMenu.classList.add('hidden');
-              }
-          });
-      }
-  
-      // Set active navigation item based on current page
-      const currentPage = window.location.pathname.split('/').pop();
-      const navLinks = document.querySelectorAll('nav a');
+<!-- Shared Navigation Component - navbar.html -->
+<nav class="bg-white shadow-sm">
+    <!-- Desktop: Single Row Layout (Original Style) -->
+    <div class="hidden md:flex h-20 items-center justify-between px-6 py-4">
+        <!-- Left: Logo -->
+        <a href="index.html">
+            <div class="text-4xl font-bold text-[#212121]">Learnify.</div>
+        </a>
       
-      navLinks.forEach(link => {
-          const href = link.getAttribute('href');
-          if (href && href.includes(currentPage)) {
-              link.classList.add('text-[#308fe8]');
-              link.classList.remove('hover:text-[#308fe8]');
-          }
-      });
-  });
-  </script>
+        <!-- Right: Desktop Navigation -->
+        <div class="flex items-center justify-between w-full px-8">
+            <ul class="flex items-center gap-8 text-[#212121] text-lg font-semibold mt-2.5">
+                <li class="hover:text-[#308fe8]"><a href="./learnifyuser.html">DashBoard</a></li>
+                <li class="hover:text-[#308fe8]"><a href="./quizrequirement.html">New Quiz</a></li>
+            </ul>
+      
+            <ul class="flex items-center gap-4 text-[#212121] text-lg mt-1">
+                <li>
+                    <div
+                        id="coin-display"
+                        class="bg-[#212121] text-white font-semibold px-5 py-2 rounded-3xl whitespace-nowrap min-w-[80px]"
+                    >
+                        Coins: <span id="coin-count">Loading...</span>
+                    </div>
+                </li>
+      
+                <li class="relative group">
+                    <button class="px-2 py-2">
+                        <img src="images/Untitled design (15).png" alt="User Icon" class="h-[2rem]" />
+                    </button>
+                    <ul
+                        class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg hidden group-hover:block z-10 text-sm text-[#212121]"
+                    >
+                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="logout()">Logout</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Mobile: Two Row Layout (New Style) -->
+    <div class="md:hidden">
+        <!-- Top Row: Logo, Coins, Profile -->
+        <div class="h-16 flex items-center justify-between px-4">
+            <!-- Left: Logo -->
+            <a href="index.html">
+                <div class="text-3xl font-bold text-[#212121]">Learnify.</div>
+            </a>
+          
+            <!-- Right: Coins & Profile -->
+            <div class="flex items-center gap-3">
+                <!-- Coins Display -->
+                <div
+                    id="coin-display-mobile"
+                    class="bg-[#212121] text-white font-semibold px-3 py-1.5 rounded-3xl whitespace-nowrap text-sm"
+                >
+                    Coins: <span id="coin-count">Loading...</span>
+                </div>
+          
+                <!-- Profile Icon -->
+                <div class="relative group">
+                    <button class="px-1 py-1">
+                        <img src="images/Untitled design (15).png" alt="User Icon" class="h-[1.5rem]" />
+                    </button>
+                    <ul
+                        class="absolute right-0 mt-2 w-28 bg-white rounded-lg shadow-lg hidden group-hover:block z-10 text-xs text-[#212121]"
+                    >
+                        <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                        <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer" onclick="logout()">Logout</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row: Navigation Links -->
+        <div class="border-t border-gray-100 px-4 py-3">
+            <ul class="flex justify-center gap-6 text-[#212121] text-base font-semibold">
+                <li class="hover:text-[#308fe8] transition-colors duration-200">
+                    <a href="./learnifyuser.html" class="px-3 py-2 rounded-lg hover:bg-gray-50">Dashboard</a>
+                </li>
+                <li class="hover:text-[#308fe8] transition-colors duration-200">
+                    <a href="./quizrequirement.html" class="px-3 py-2 rounded-lg hover:bg-gray-50">New Quiz</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Demo content to show navbar in context -->
+
+<script>
+    const BackendHost = "https://learnify-production-be40.up.railway.app";
+
+    // 🔧 Shared navbar functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set active navigation item based on current page
+        const currentPage = window.location.pathname.split('/').pop();
+        const navLinks = document.querySelectorAll('nav a');
+        
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && href.includes(currentPage)) {
+                link.classList.add('text-[#308fe8]');
+                link.classList.remove('hover:text-[#308fe8]');
+            }
+        });
+
+        // Load coin count for both desktop and mobile displays
+        setTimeout(() => {
+            const desktopCoinCount = document.getElementById('coin-count');
+            const mobileCoinCount = document.getElementById('coin-count-mobile');
+            
+            if (desktopCoinCount) desktopCoinCount.textContent = '1,234';
+            if (mobileCoinCount) mobileCoinCount.textContent = '1,234';
+        }, 1000);
+    });
+
+    // Logout function placeholder
+    function logout() {
+        console.log('Logout clicked');
+        // Add your logout logic here
+    }
+</script>
+
+</body>
+</html>
