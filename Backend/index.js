@@ -11,7 +11,7 @@ const app = express();
 
 const authMiddleware = require("./middlewares/auth.js");
 
-app.use(cors({
+app.use(cors({     // cross origion resource sharing rizwan dhaikh laina dobara isy 
   origin: true,        // Allows any origin (like app.use(cors()) but with more control)
   credentials: true,   // Allows cookies, authorization headers, etc.
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
